@@ -6,9 +6,20 @@ const Axios = axios.create({
   timeout: 3000,
 });
 
+Axios.interceptors.request.use(
+  (request) => {
+    console.log(request);
+    return request;
+  },
+  (err) => {
+    console.log(err);
+    return Promise.reject(err);
+  }
+);
+
 Axios.interceptors.response.use(
   (response) => {
-    if (response.status == 200 && response.data.code == 0) {
+    if (response.status == 200 && response.data.code == 200) {
       console.info(
         "接口" +
           response.config.url +
@@ -17,31 +28,31 @@ Axios.interceptors.response.use(
       );
       return Promise.resolve(response.data.data);
     } else {
-      Promise.reject(response.data.msg);
+      console.log(response.data.message);
+      console.log(response.data.description);
       return Promise.resolve(response.data.code);
     }
   },
   (err) => {
-    console.log(err.response.data);
+    console.log(err);
     return Promise.reject(err);
   }
 );
 
 export default {
-
   get(url: string, params: any) {
-      return Axios.get(url, { params: params })
+    return Axios.get(url, { params: params });
   },
 
   post(url: string, data: any, config: any) {
-      return Axios.post(url, data, config || {})
+    return Axios.post(url, data, config || {});
   },
 
   put(url: string, data: any, config: any) {
-      return Axios.put(url, data, config || {})
+    return Axios.put(url, data, config || {});
   },
 
   delete(url: string, params: any) {
-      return Axios.delete(url, { params: params })
-  }
-}
+    return Axios.delete(url, { params: params });
+  },
+};

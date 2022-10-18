@@ -3,8 +3,6 @@
     <a-form
       :model="formState"
       name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
       autocomplete="off"
       @finish="onFinish"
       @finishFailed="onFinishFailed"
@@ -25,11 +23,11 @@
         <a-input-password v-model:value="formState.password" />
       </a-form-item>
 
-      <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
+      <a-form-item name="remember">
         <a-checkbox v-model:checked="formState.remember">记住登录</a-checkbox>
       </a-form-item>
 
-      <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+      <a-form-item>
         <a-button type="primary" html-type="submit">登录</a-button>
       </a-form-item>
     </a-form>
@@ -39,6 +37,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
+import api from "../api/api";
 interface FormState {
   username: string;
   password: string;
@@ -54,7 +53,19 @@ export default defineComponent({
     });
 
     const onFinish = (values: any) => {
-      console.log("Success:", values);
+      api
+        .login({
+          name: values.username,
+          password: values.password,
+        })
+        .then((res: any) => {
+          if (res != 200) {
+            console.log(res);
+          } else {
+            console.log(res);
+            //TODO 业务逻辑
+          }
+        });
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -76,6 +87,6 @@ export default defineComponent({
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-70%, -50%);
+  transform: translate(-60%, -50%);
 }
 </style>
