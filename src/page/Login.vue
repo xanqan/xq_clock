@@ -1,7 +1,7 @@
 <template>
   <div id="Login">
     <a-form
-      :model="formState"
+      :model="state"
       name="basic"
       autocomplete="off"
       @finish="onFinish"
@@ -9,10 +9,10 @@
     >
       <a-form-item
         label="账号"
-        name="username"
+        name="name"
         :rules="[{ required: true, message: '请输入账号!' }]"
       >
-        <a-input v-model:value="formState.username" />
+        <a-input v-model:value="state.name" />
       </a-form-item>
 
       <a-form-item
@@ -20,11 +20,11 @@
         name="password"
         :rules="[{ required: true, message: '请输入密码!' }]"
       >
-        <a-input-password v-model:value="formState.password" />
+        <a-input-password v-model:value="state.password" />
       </a-form-item>
 
       <a-form-item name="remember">
-        <a-checkbox v-model:checked="formState.remember">记住登录</a-checkbox>
+        <a-checkbox v-model:checked="state.remember">记住登录</a-checkbox>
       </a-form-item>
 
       <a-form-item>
@@ -36,18 +36,19 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import { useStore } from "vuex";
 import api from "../api/api";
-interface FormState {
-  username: string;
+import router from "../router";
+import store from "../store";
+interface state {
+  name: string;
   password: string;
   remember: boolean;
 }
 export default defineComponent({
   name: "App",
   setup() {
-    const formState = reactive<FormState>({
-      username: "",
+    const state = reactive<state>({
+      name: "",
       password: "",
       remember: true,
     });
@@ -55,15 +56,15 @@ export default defineComponent({
     const onFinish = (values: any) => {
       api
         .login({
-          name: values.username,
+          name: values.name,
           password: values.password,
         })
         .then((res: any) => {
-          if (res != 200) {
-            console.log(res);
+          if (res.code == 200) {
+            store.commit("setToken", res.data);
+            router.push("/home");
           } else {
             console.log(res);
-            //TODO 业务逻辑
           }
         });
     };
@@ -73,7 +74,7 @@ export default defineComponent({
     };
 
     return {
-      formState,
+      state,
       onFinish,
       onFinishFailed,
     };
