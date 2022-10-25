@@ -52,7 +52,7 @@
         <div
           :style="{ padding: '24px', background: '#fff', minHeight: '360px' }"
         >
-          Bill is a cat.
+          <router-view />
         </div>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
@@ -70,12 +70,8 @@ import {
   TeamOutlined,
   FileOutlined,
 } from "@ant-design/icons-vue";
-import { defineComponent, reactive, ref, onBeforeMount } from "vue";
-import api from "../api/api";
-import { File } from "../interface";
-import store from "../store";
+import { defineComponent, reactive } from "vue";
 interface state {
-  files: File[] | null;
   selectedKeys: string[];
 }
 export default defineComponent({
@@ -89,19 +85,7 @@ export default defineComponent({
   },
   setup() {
     const state = reactive<state>({
-      files: null,
       selectedKeys: ["1"],
-    });
-
-    onBeforeMount(() => {
-      api.home().then((res: any) => {
-        if (res.code == 200) {
-          store.commit("setUser", res.data.user);
-          state.files = res.data.files;
-        } else {
-          console.log(res);
-        }
-      });
     });
 
     function test() {
