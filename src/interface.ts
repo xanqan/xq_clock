@@ -1,20 +1,20 @@
 export interface User {
-  id: number | null;
-  name: string | null;
-  nickName: string | null;
-  avatar: string | null;
-  sizeMax: number | null;
-  sizeUse: number | null;
+  id: number | undefined;
+  name: string | undefined;
+  nickName: string | undefined;
+  avatar: string | undefined;
+  sizeMax: number | undefined;
+  sizeUse: number | undefined;
 }
 
 export interface File {
-  id: number | null;
-  name: string | null;
-  path: string | null;
-  fileSize: number | null;
-  createTime: string | null;
-  modifyTime: string | null;
-  size: string | null;
-  duration: string | null;
-  isFolder: number | null;
+  id: number | undefined;
+  name: string | undefined;
+  path: string | undefined;
+  fileSize: number | undefined;
+  createTime: string | undefined;
+  modifyTime: string | undefined;
+  size: string | undefined;
+  duration: string | undefined;
+  isFolder: number | undefined;
 }
