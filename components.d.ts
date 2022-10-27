@@ -25,6 +25,7 @@ declare module '@vue/runtime-core' {
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
+    Favorites: typeof import('./src/components/Favorites.vue')['default']
     File: typeof import('./src/components/File.vue')['default']
     Fileblock: typeof import('./src/components/Fileblock.vue')['default']
     List: typeof import('./src/components/List.vue')['default']

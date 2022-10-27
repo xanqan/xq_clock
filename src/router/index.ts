@@ -18,6 +18,11 @@ const routes = [
         name: "List",
         component: () => import("../components/List.vue"),
       },
+      {
+        path: "favorites",
+        name: "Favorites",
+        component: () => import("../components/Favorites.vue"),
+      },
     ],
   },
 ];
