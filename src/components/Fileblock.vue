@@ -1,11 +1,21 @@
 <template>
-  <div class="file">
-    <h1 v-if="state.file.isFolder">folder</h1>
-    <img v-else class="img" :src="state.src" />
+  <div v-if="state.file.isFolder" class="name">
+    <folder-two-tone />
+    <p>{{ state.file.name }}</p>
+  </div>
+  <div v-else class="file">
+    <div class="img">
+      <img style="object-fit: cover" :src="state.src" />
+    </div>
+    <div class="name">
+      <picture-two-tone />
+      <p>{{ state.file.name }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import { FolderTwoTone, PictureTwoTone } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref } from "vue";
 import { File } from "../interface";
 import store from "../store";
@@ -16,6 +26,7 @@ interface state {
 export default defineComponent({
   name: "Fileblock",
   props: ["file"],
+  components: { FolderTwoTone, PictureTwoTone },
   setup(props) {
     const state = reactive<state>({
       file: props.file,
@@ -37,14 +48,41 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.name {
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 15px;
+  height: 50px;
+  width: 200px;
+  border-radius: 6px;
+  border: 1px solid #00a0e9;
+}
+.name >>> svg {
+  width: 1.5em !important;
+  height: 1.5em !important;
+}
+.name p {
+  font-size: initial;
+  margin: 0 0 4px 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .file {
-  height: 150px;
-  width: 150px;
-  background: #00a0e9;
+  height: 200px;
+  width: 200px;
+  border-radius: 6px;
+  border: 1px solid #00a0e9;
+}
+.file .name {
+  border: hidden;
 }
 .img {
   width: 100%;
-  height: 120px;
-  object-fit: cover;
+  height: 150px;
+}
+.img img {
+  width: 100%;
+  height: 100%;
 }
 </style>
