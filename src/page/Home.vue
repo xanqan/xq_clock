@@ -57,7 +57,7 @@
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
-      <a-layout style="padding: 24px 24px 24px">
+      <a-layout>
         <a-layout-content
           :style="{
             background: '#fff',
