@@ -12,6 +12,7 @@ const Axios = axios.create({
 
 Axios.interceptors.request.use(
   (request) => {
+    request.headers!.authorization = `Bearer ${store.state.token}`;
     console.log("发送请求" + "\n" + request.method + "\n" + request.url);
     console.log(request.data);
     return request;
