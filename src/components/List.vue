@@ -25,11 +25,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onBeforeMount, provide } from "vue";
+import { defineComponent, reactive, onBeforeMount } from "vue";
 import api from "../api/api";
 import store from "../store";
 import { File } from "../interface";
 import Fileblock from "../components/Fileblock.vue";
+import router from "../router";
 interface state {
   fileInfos: File[];
   files: File[];
@@ -53,6 +54,10 @@ export default defineComponent({
           store.commit("setUser", res.data.user);
           state.fileInfos = res.data.files;
           state.fileInfos.forEach(classify);
+        } else if (res.code == 40402) {
+          console.log(res.message);
+          store.commit("setToken", "");
+          router.push("/login");
         } else {
           console.log(res);
         }
@@ -80,7 +85,6 @@ export default defineComponent({
   border: 0;
 }
 .gutter-box {
-  /* border: 1px solid brown; */
   padding: 5px 0;
 }
 </style>
