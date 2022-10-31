@@ -1,18 +1,15 @@
 <template>
   <a-layout>
     <a-layout-header class="header">
-      <menu-unfold-outlined
-        v-if="state.collapsed"
+      <menu-outlined
         class="trigger"
-        @click="collapsed"
+        @click="state.collapsed = !state.collapsed"
       />
-      <menu-fold-outlined v-else class="trigger" @click="collapsed" />
-      <div class="logo"><p>xqcloud</p></div>
-      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-        <a-menu-item key="1" @click="collapsed">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
+      <div class="logo">xqcloud</div>
+      <div class="topMenu">
+        <setting-filled />
+        <user-outlined style="margin: 0 0 0 20px" />
+      </div>
     </a-layout-header>
     <a-layout>
       <a-layout-sider
@@ -78,8 +75,8 @@ import {
   UserOutlined,
   LaptopOutlined,
   NotificationOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  MenuOutlined,
+  SettingFilled,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref } from "vue";
 import router from "../router";
@@ -93,18 +90,14 @@ export default defineComponent({
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
+    MenuOutlined,
+    SettingFilled,
   },
   setup() {
     const state = reactive<state>({
       selectedKeys: ["1"],
       collapsed: false,
     });
-
-    function collapsed() {
-      state.collapsed = !state.collapsed;
-    }
 
     function Option_1() {
       console.log("Option_1");
@@ -118,7 +111,6 @@ export default defineComponent({
 
     return {
       state,
-      collapsed,
       Option_1,
       Option_2,
       selectedKeys1: ref<string[]>(["2"]),
@@ -130,22 +122,27 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.trigger {
-  float: left;
-  color: #fff;
-  margin: 20px 24px 16px 0;
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
 }
-.trigger >>> svg {
-  width: 2em !important;
-  height: 2em !important;
+.trigger {
+  color: #fff;
+}
+.topMenu {
+  color: #fff;
+  flex: 1;
+  text-align: right;
+}
+.trigger >>> svg,
+.topMenu >>> svg {
+  width: 1.5em !important;
+  height: 1.5em !important;
 }
 .logo {
-  float: left;
-  width: 120px;
-  height: 31px;
-  margin: 0 24px 16px 0;
   color: #fff;
-  text-align: center;
   font-size: xx-large;
+  margin: 0 0 10px 20px;
 }
 </style>
