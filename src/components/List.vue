@@ -1,5 +1,15 @@
 <template>
   <div class="gutter-example">
+    <a-dropdown :trigger="['contextmenu']">
+      <div class="mongolia"></div>
+      <template #overlay>
+        <a-menu>
+          <a-menu-item key="1">1st menu item_list</a-menu-item>
+          <a-menu-item key="2">2nd menu item</a-menu-item>
+          <a-menu-item key="3">3rd menu item</a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
     <a-breadcrumb style="margin: 16px 0">
       <a-breadcrumb-item>Home</a-breadcrumb-item>
       <a-breadcrumb-item>List</a-breadcrumb-item>
@@ -80,6 +90,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.mongolia {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+}
 .gutter-example :deep(.ant-row > div) {
   background: transparent;
   border: 0;

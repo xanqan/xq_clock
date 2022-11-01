@@ -1,17 +1,26 @@
 <template>
-  <div v-if="state.file.isFolder" class="name">
-    <folder-two-tone />
-    <p>{{ state.file.name }}</p>
-  </div>
-  <div v-else class="file">
-    <div class="img">
-      <img style="object-fit: cover" :src="state.src" />
-    </div>
-    <div class="name">
-      <picture-two-tone />
+  <a-dropdown :trigger="['contextmenu']">
+    <div v-if="state.file.isFolder" class="name">
+      <folder-two-tone />
       <p>{{ state.file.name }}</p>
     </div>
-  </div>
+    <div v-else class="file">
+      <div class="img">
+        <img style="object-fit: cover" :src="state.src" />
+      </div>
+      <div class="name">
+        <picture-two-tone />
+        <p>{{ state.file.name }}</p>
+      </div>
+    </div>
+    <template #overlay>
+      <a-menu>
+        <a-menu-item key="1">1st menu item</a-menu-item>
+        <a-menu-item key="2">2nd menu item</a-menu-item>
+        <a-menu-item key="3">3rd menu item</a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
 </template>
 
 <script lang="ts">
