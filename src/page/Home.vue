@@ -8,7 +8,16 @@
       <div class="logo">xqcloud</div>
       <div class="topMenu">
         <setting-filled />
-        <user-outlined style="margin: 0 0 0 20px" />
+        <a-dropdown>
+          <user-outlined style="margin: 0 0 0 20px" />
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>1st menu item </a-menu-item>
+              <a-menu-item>2nd menu item </a-menu-item>
+              <a-menu-item @click="logout">退出登录</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
     </a-layout-header>
     <a-layout>
@@ -109,10 +118,16 @@ export default defineComponent({
       router.push(`/home/favorites`);
     }
 
+    function logout() {
+      localStorage.clear();
+      router.push(`/login`);
+    }
+
     return {
       state,
       Option_1,
       Option_2,
+      logout,
       selectedKeys1: ref<string[]>(["2"]),
       selectedKeys2: ref<string[]>(["1"]),
       openKeys: ref<string[]>(["sub1"]),
