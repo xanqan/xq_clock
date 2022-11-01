@@ -152,8 +152,8 @@ export default defineComponent({
 }
 .trigger >>> svg,
 .topMenu >>> svg {
-  width: 1.5em !important;
-  height: 1.5em !important;
+  width: 1.5em;
+  height: 1.5em;
 }
 .logo {
   color: #fff;

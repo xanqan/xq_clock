@@ -10,11 +10,14 @@
         </a-menu>
       </template>
     </a-dropdown>
-    <a-breadcrumb style="margin: 16px 0">
-      <a-breadcrumb-item>Home</a-breadcrumb-item>
-      <a-breadcrumb-item>List</a-breadcrumb-item>
-      <a-breadcrumb-item>App</a-breadcrumb-item>
-    </a-breadcrumb>
+    <div class="listTop">
+      <a-breadcrumb style="margin: 16px 0">
+        <a-breadcrumb-item>Home</a-breadcrumb-item>
+        <a-breadcrumb-item>List</a-breadcrumb-item>
+        <a-breadcrumb-item>App</a-breadcrumb-item>
+      </a-breadcrumb>
+      <appstore-outlined style="margin: 16px 0; flex: 1; text-align: right" />
+    </div>
     <h3 v-if="state.folders.length">文件夹</h3>
     <a-row :gutter="[18, 10]">
       <a-col class="gutter-row" v-for="file in state.folders" :key="file.id">
@@ -35,6 +38,7 @@
 </template>
 
 <script lang="ts">
+import { AppstoreOutlined } from "@ant-design/icons-vue";
 import { defineComponent, reactive, onBeforeMount } from "vue";
 import api from "../api/api";
 import store from "../store";
@@ -50,6 +54,7 @@ export default defineComponent({
   name: "List",
   components: {
     Fileblock,
+    AppstoreOutlined,
   },
   setup() {
     const state = reactive<state>({
@@ -102,5 +107,12 @@ export default defineComponent({
 }
 .gutter-box {
   padding: 5px 0;
+}
+.listTop {
+  display: flex;
+}
+.listTop >>> svg {
+  width: 1.5em;
+  height: 1.5em;
 }
 </style>

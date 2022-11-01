@@ -67,8 +67,8 @@ export default defineComponent({
   border: 1px solid #00a0e9;
 }
 .name >>> svg {
-  width: 1.5em !important;
-  height: 1.5em !important;
+  width: 1.5em;
+  height: 1.5em;
 }
 .name p {
   font-size: initial;
