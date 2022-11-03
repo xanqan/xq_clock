@@ -64,14 +64,7 @@
         </a-menu>
       </a-layout-sider>
       <a-layout>
-        <a-layout-content
-          :style="{
-            background: '#fff',
-            padding: '0 24px 24px 24px',
-            margin: 0,
-            minHeight: '280px',
-          }"
-        >
+        <a-layout-content style="background-color: #fff">
           <router-view />
         </a-layout-content>
       </a-layout>
