@@ -4,14 +4,9 @@
       <folder-two-tone />
       <p>{{ state.file.name }}</p>
     </div>
-    <div v-else class="file">
-      <div v-if="isFileSort == 1" class="img">
-        <img style="object-fit: cover" :src="state.src" />
-      </div>
-      <div class="name">
-        <picture-two-tone />
-        <p>{{ state.file.name }}</p>
-      </div>
+    <div v-else class="name">
+      <picture-two-tone />
+      <p>{{ state.file.name }}</p>
     </div>
     <template #overlay>
       <a-menu>
@@ -32,8 +27,9 @@ interface state {
   file: File;
   src: string | undefined;
 }
+interface state {}
 export default defineComponent({
-  name: "Fileblock",
+  name: "FileLine",
   props: ["file"],
   components: { FolderTwoTone, PictureTwoTone },
   setup(props) {
@@ -41,13 +37,6 @@ export default defineComponent({
       file: props.file,
       src: undefined,
     });
-
-    state.src =
-      "http://121.196.210.13:9000" +
-      "/xq" +
-      store.state.user?.id +
-      state.file.path +
-      state.file.name;
 
     return {
       state,
@@ -59,13 +48,14 @@ export default defineComponent({
 
 <style scoped>
 .name {
+  height: 45px;
   display: flex;
   align-items: center;
-  padding: 0 10px 0 15px;
-  height: 50px;
-  width: 200px;
-  border-radius: 6px;
-  border: 1px solid #00a0e9;
+  padding: 0 24px;
+  border-top: 1px dashed #00a0e9;
+}
+.name:hover {
+  background-color: #d0e8f3;
 }
 .name >>> svg {
   width: 1.5em;
@@ -77,22 +67,5 @@ export default defineComponent({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.file {
-  /* height: 200px; */
-  width: 200px;
-  border-radius: 6px;
-  border: 1px solid #00a0e9;
-}
-.file .name {
-  border: hidden;
-}
-.img {
-  width: 100%;
-  height: 150px;
-}
-.img img {
-  width: 100%;
-  height: 100%;
 }
 </style>
