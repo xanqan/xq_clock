@@ -19,3 +19,8 @@ export interface File {
   duration: string | undefined;
   isFolder: number | undefined;
 }
+
+export interface Path {
+  id: number;
+  name: string;
+}
