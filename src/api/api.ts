@@ -7,4 +7,7 @@ export default {
   home() {
     return http.get("/pageInit/home");
   },
+  getFileList(params: any) {
+    return http.get(`/file/getFileList?path=${params.path}`);
+  },
 };

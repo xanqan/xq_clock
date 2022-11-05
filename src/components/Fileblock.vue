@@ -15,9 +15,9 @@
     </div>
     <template #overlay>
       <a-menu>
-        <a-menu-item key="1">1st menu item_{{ state.file.name }}</a-menu-item>
-        <a-menu-item key="2">2nd menu item</a-menu-item>
-        <a-menu-item key="3">3rd menu item</a-menu-item>
+        <a-menu-item key="1" @click="setCopyFile">复制</a-menu-item>
+        <a-menu-item key="2">//粘贴</a-menu-item>
+        <a-menu-item key="3">重命名</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -47,11 +47,17 @@ export default defineComponent({
       "/xq" +
       store.state.user?.id +
       state.file.path +
+      "/" +
       state.file.name;
+
+    function setCopyFile() {
+      store.commit("setCopyFile", state.file);
+    }
 
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
+      setCopyFile,
     };
   },
 });
