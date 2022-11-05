@@ -1,10 +1,11 @@
 import { createStore } from "vuex";
-import { User } from "../interface";
+import { User, File } from "../interface";
 
 export interface ModuleState {
   token: string | null;
   user: User | null;
   isFileSort: number;
+  copyFile: File | undefined;
 }
 
 export default createStore({
@@ -12,6 +13,7 @@ export default createStore({
     token: localStorage.getItem("token") ? localStorage.getItem("token") : "",
     user: null,
     isFileSort: 1,
+    copyFile: undefined,
   }),
   mutations: {
     setToken(state: ModuleState, date: any) {
@@ -23,6 +25,9 @@ export default createStore({
     },
     updateIsFileSort(state: ModuleState) {
       state.isFileSort != 3 ? ++state.isFileSort : (state.isFileSort = 1);
+    },
+    setCopyFile(state: ModuleState, date: File) {
+      state.copyFile = date;
     },
   },
   actions: {},
