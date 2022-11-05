@@ -15,7 +15,7 @@
       </div>
     </div>
     <div :style="isFileSort != 3 ? listStyle : listStyle2">
-      <a-dropdown :trigger="['contextmenu']">
+      <a-dropdown v-if="isFileSort != 3" :trigger="['contextmenu']">
         <div class="mongolia"></div>
         <template #overlay>
           <a-menu>
@@ -47,9 +47,9 @@
           </a-col>
         </a-row>
       </div>
-      <div v-if="isFileSort == 3">
+      <div v-if="isFileSort == 3" style="z-index: 1">
         <div v-for="file in state.folders" :key="file.id">
-          <FileLime :file="file" />
+          <FileLime :file="file" @click="enterFolder(file)" />
         </div>
         <div v-for="file in state.files" :key="file.id">
           <FileLime :file="file" />
