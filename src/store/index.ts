@@ -6,6 +6,7 @@ export interface ModuleState {
   user: User | null;
   isFileSort: number;
   copyFile: File | undefined;
+  isCopy: number;
 }
 
 export default createStore({
@@ -14,6 +15,7 @@ export default createStore({
     user: null,
     isFileSort: 1,
     copyFile: undefined,
+    isCopy: 1,
   }),
   mutations: {
     setToken(state: ModuleState, date: any) {
@@ -28,6 +30,11 @@ export default createStore({
     },
     setCopyFile(state: ModuleState, date: File) {
       state.copyFile = date;
+      state.isCopy = 1;
+    },
+    setMoveFile(state: ModuleState, date: File) {
+      state.copyFile = date;
+      state.isCopy = 0;
     },
   },
   actions: {},

@@ -34,7 +34,11 @@
             :key="file.id"
           >
             <div class="gutter-box">
-              <Fileblock :file="file" @click="enterFolder(file)" />
+              <Fileblock
+                :file="file"
+                @click="enterFolder(file)"
+                @fileDelete="fileDelete"
+              />
             </div>
           </a-col>
         </a-row>
@@ -42,12 +46,12 @@
         <a-row :gutter="[18, 10]">
           <a-col class="gutter-row" v-for="file in state.files" :key="file.id">
             <div class="gutter-box">
-              <Fileblock :file="file" />
+              <Fileblock :file="file" @fileDelete="fileDelete" />
             </div>
           </a-col>
         </a-row>
       </div>
-      <div v-if="isFileSort == 3" style="z-index: 1">
+      <div v-if="isFileSort == 3">
         <div v-for="file in state.folders" :key="file.id">
           <FileLime :file="file" @click="enterFolder(file)" />
         </div>
@@ -60,6 +64,8 @@
 </template>
 
 <script lang="ts">
+import { message } from "ant-design-vue";
+import "ant-design-vue/es/message/style/css";
 import { AppstoreOutlined } from "@ant-design/icons-vue";
 import { defineComponent, reactive, onBeforeMount, computed, ref } from "vue";
 import api from "../api/api";
@@ -87,6 +93,18 @@ export default defineComponent({
       fileInfos: [],
       files: [],
       folders: [],
+    });
+
+    let path = computed(() => {
+      let path = "";
+      if (state.paths.length == 0) {
+        path = "/";
+      } else {
+        state.paths.forEach((value: Path) => {
+          path = path + "/" + value.name;
+        });
+      }
+      return path;
     });
 
     onBeforeMount(() => {
@@ -118,13 +136,12 @@ export default defineComponent({
     }
 
     function enterFolder(file: any) {
-      var path = "/";
-      state.paths.forEach((value: Path) => {
-        path = path + value.name + "/";
-      });
       api
         .getFileList({
-          path: path + file.name,
+          path:
+            path.value == "/"
+              ? path.value + file.name
+              : path.value + "/" + file.name,
         })
         .then((res: any) => {
           state.fileInfos.length = 0;
@@ -145,11 +162,11 @@ export default defineComponent({
     }
 
     function enterPath(id: number) {
-      var path = "/";
+      let path = "/";
       if (id < 0) {
         console.log("Home");
       } else {
-        for (var i = 0; i < id; ++i) {
+        for (let i = 0; i < id; ++i) {
           path = path + state.paths[i].name + "/";
         }
         path = path + state.paths[id].name;
@@ -172,9 +189,44 @@ export default defineComponent({
 
     function paste() {
       if (store.state.copyFile == undefined) {
-        console.log("还没有复制文件");
+        message.error("还没有复制文件");
+      } else if (store.state.isCopy == 1) {
+        api
+          .fileCopy({
+            path: store.state.copyFile.path,
+            name: store.state.copyFile.name,
+            newPath: path.value,
+          })
+          .then((res: any) => {
+            if (res.code == 200) {
+              let length = state.files.push(store.state.copyFile as File);
+              state.files[length - 1].path = path.value;
+            }
+          });
       } else {
-        console.log(store.state.copyFile);
+        api
+          .fileMove({
+            path: store.state.copyFile.path,
+            name: store.state.copyFile.name,
+            newPath: path.value,
+          })
+          .then((res: any) => {
+            if (res.code == 200) {
+              let length = state.files.push(store.state.copyFile as File);
+              state.files[length - 1].path = path.value;
+              store.commit("setCopyFile", state.files[length - 1]);
+            }
+          });
+      }
+    }
+
+    function fileDelete(file: File) {
+      if (file.isFolder == 1) {
+        let index = state.folders.lastIndexOf(file);
+        state.folders.splice(index, index + 1);
+      } else {
+        let index = state.files.lastIndexOf(file);
+        state.files.splice(index, index + 1);
       }
     }
 
@@ -191,6 +243,7 @@ export default defineComponent({
       enterFolder,
       enterPath,
       paste,
+      fileDelete,
     };
   },
 });

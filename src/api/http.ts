@@ -4,7 +4,7 @@ import store from "../store";
 const Axios = axios.create({
   baseURL: import.meta.env.VITE_ENV,
   withCredentials: true,
-  timeout: 3000,
+  timeout: 5000,
   headers: {
     authorization: `Bearer ${store.state.token}`,
   },

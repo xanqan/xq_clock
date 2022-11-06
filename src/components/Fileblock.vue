@@ -16,7 +16,8 @@
     <template #overlay>
       <a-menu>
         <a-menu-item key="1" @click="setCopyFile">复制</a-menu-item>
-        <a-menu-item key="2">//粘贴</a-menu-item>
+        <a-menu-item key="2" @click="setMoveFile">剪切</a-menu-item>
+        <a-menu-item key="2" @click="fileDelete">删除</a-menu-item>
         <a-menu-item key="3">重命名</a-menu-item>
       </a-menu>
     </template>
@@ -25,7 +26,9 @@
 
 <script lang="ts">
 import { FolderTwoTone, PictureTwoTone } from "@ant-design/icons-vue";
+import { context } from "ant-design-vue/lib/vc-image/src/PreviewGroup";
 import { defineComponent, reactive, computed } from "vue";
+import api from "../api/api";
 import { File } from "../interface";
 import store from "../store";
 interface state {
@@ -36,7 +39,7 @@ export default defineComponent({
   name: "Fileblock",
   props: ["file"],
   components: { FolderTwoTone, PictureTwoTone },
-  setup(props) {
+  setup(props, context) {
     const state = reactive<state>({
       file: props.file,
       src: undefined,
@@ -54,10 +57,42 @@ export default defineComponent({
       store.commit("setCopyFile", state.file);
     }
 
+    function setMoveFile() {
+      store.commit("setMoveFile", state.file);
+    }
+
+    function fileDelete() {
+      if (state.file.isFolder) {
+        api
+          .folderDelete({
+            path: state.file.path,
+            name: state.file.name,
+          })
+          .then((res: any) => {
+            if (res.code == 200) {
+              context.emit("fileDelete", state.file);
+            }
+          });
+      } else {
+        api
+          .fileDelete({
+            path: state.file.path,
+            name: state.file.name,
+          })
+          .then((res: any) => {
+            if (res.code == 200) {
+              context.emit("fileDelete", state.file);
+            }
+          });
+      }
+    }
+
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
       setCopyFile,
+      setMoveFile,
+      fileDelete,
     };
   },
 });
