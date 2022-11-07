@@ -20,7 +20,7 @@
         <template #overlay>
           <a-menu>
             <a-menu-item key="1" @click="paste">粘贴</a-menu-item>
-            <a-menu-item key="2">2nd menu item</a-menu-item>
+            <a-menu-item key="2" @click="createFolder">新建文件夹</a-menu-item>
             <a-menu-item key="3">3rd menu item</a-menu-item>
           </a-menu>
         </template>
@@ -38,6 +38,7 @@
                 :file="file"
                 @click="enterFolder(file)"
                 @fileDelete="fileDelete"
+                @fileReName="fileReName"
               />
             </div>
           </a-col>
@@ -46,7 +47,11 @@
         <a-row :gutter="[18, 10]">
           <a-col class="gutter-row" v-for="file in state.files" :key="file.id">
             <div class="gutter-box">
-              <Fileblock :file="file" @fileDelete="fileDelete" />
+              <Fileblock
+                :file="file"
+                @fileDelete="fileDelete"
+                @fileReName="fileReName"
+              />
             </div>
           </a-col>
         </a-row>
@@ -191,42 +196,108 @@ export default defineComponent({
       if (store.state.copyFile == undefined) {
         message.error("还没有复制文件");
       } else if (store.state.isCopy == 1) {
-        api
-          .fileCopy({
-            path: store.state.copyFile.path,
-            name: store.state.copyFile.name,
-            newPath: path.value,
-          })
-          .then((res: any) => {
-            if (res.code == 200) {
-              let length = state.files.push(store.state.copyFile as File);
-              state.files[length - 1].path = path.value;
-            }
-          });
+        if (store.state.copyFile.isFolder == 1) {
+          api
+            .folderCopy({
+              path: store.state.copyFile.path,
+              name: store.state.copyFile.name,
+              newPath: path.value,
+            })
+            .then((res: any) => {
+              if (res.code == 200) {
+                let length = state.folders.push(store.state.copyFile as File);
+                state.folders[length - 1].path = path.value;
+              }
+            });
+        } else {
+          api
+            .fileCopy({
+              path: store.state.copyFile.path,
+              name: store.state.copyFile.name,
+              newPath: path.value,
+            })
+            .then((res: any) => {
+              if (res.code == 200) {
+                let length = state.files.push(store.state.copyFile as File);
+                state.files[length - 1].path = path.value;
+              }
+            });
+        }
       } else {
-        api
-          .fileMove({
-            path: store.state.copyFile.path,
-            name: store.state.copyFile.name,
-            newPath: path.value,
-          })
-          .then((res: any) => {
-            if (res.code == 200) {
-              let length = state.files.push(store.state.copyFile as File);
-              state.files[length - 1].path = path.value;
-              store.commit("setCopyFile", state.files[length - 1]);
-            }
-          });
+        if (store.state.copyFile.isFolder == 1) {
+          api
+            .folderMove({
+              path: store.state.copyFile.path,
+              name: store.state.copyFile.name,
+              newPath: path.value,
+            })
+            .then((res: any) => {
+              if (res.code == 200) {
+                let length = state.folders.push(store.state.copyFile as File);
+                state.folders[length - 1].path = path.value;
+                store.commit("setCopyFile", state.files[length - 1]);
+              }
+            });
+        } else {
+          api
+            .fileMove({
+              path: store.state.copyFile.path,
+              name: store.state.copyFile.name,
+              newPath: path.value,
+            })
+            .then((res: any) => {
+              if (res.code == 200) {
+                let length = state.files.push(store.state.copyFile as File);
+                state.files[length - 1].path = path.value;
+                store.commit("setCopyFile", state.files[length - 1]);
+              }
+            });
+        }
       }
+    }
+
+    function createFolder() {
+      let folderName = "新建文件夹";
+      let i = 0;
+      do {
+        state.folders.forEach((value: File) => {
+          if (folderName == value.name) {
+            ++i;
+            folderName = "新建文件夹" + "(" + i + ")";
+          } else {
+            i = 0;
+          }
+        });
+      } while (i);
+      api
+        .folderCreate({
+          path: path.value,
+          name: folderName,
+        })
+        .then((res: any) => {
+          if (res.code == 200) {
+            state.folders.push(res.data);
+          }
+        });
     }
 
     function fileDelete(file: File) {
       if (file.isFolder == 1) {
         let index = state.folders.lastIndexOf(file);
-        state.folders.splice(index, index + 1);
+        state.folders.splice(index, index);
       } else {
         let index = state.files.lastIndexOf(file);
-        state.files.splice(index, index + 1);
+        state.files.splice(index, index);
+      }
+    }
+
+    function fileReName(file: File) {
+      if (file.isFolder == 1) {
+        let index = state.folders.lastIndexOf(file);
+        state.folders[index] == file;
+      } else {
+        let index = state.files.lastIndexOf(file);
+        state.files[index] == file;
       }
     }
 
@@ -243,7 +314,9 @@ export default defineComponent({
       enterFolder,
       enterPath,
       paste,
+      createFolder,
       fileDelete,
+      fileReName,
     };
   },
 });
