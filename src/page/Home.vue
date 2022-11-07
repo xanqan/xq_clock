@@ -1,6 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-header class="header">
+    <a-layout-header class="header" style="background: #05348b">
       <menu-outlined
         class="trigger"
         @click="state.collapsed = !state.collapsed"

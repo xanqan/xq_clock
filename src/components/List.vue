@@ -66,6 +66,7 @@
       </div>
     </div>
   </div>
+  <Upload />
 </template>
 
 <script lang="ts">
@@ -77,8 +78,9 @@ import api from "../api/api";
 import store from "../store";
 import router from "../router";
 import { Path, File } from "../interface";
-import Fileblock from "../components/Fileblock.vue";
-import FileLime from "../components/FileLine.vue";
+import Upload from "./Upload.vue";
+import Fileblock from "./Fileblock.vue";
+import FileLime from "./FileLine.vue";
 interface state {
   paths: Path[];
   fileInfos: File[];
@@ -88,6 +90,7 @@ interface state {
 export default defineComponent({
   name: "List",
   components: {
+    Upload,
     Fileblock,
     FileLime,
     AppstoreOutlined,
