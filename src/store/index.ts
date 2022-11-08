@@ -5,6 +5,7 @@ export interface ModuleState {
   token: string | null;
   user: User | null;
   isFileSort: number;
+  path: string;
   copyFile: File | undefined;
   isCopy: number;
 }
@@ -14,26 +15,30 @@ export default createStore({
     token: localStorage.getItem("token") ? localStorage.getItem("token") : "",
     user: null,
     isFileSort: 1,
+    path: "/",
     copyFile: undefined,
     isCopy: 1,
   }),
   mutations: {
-    setToken(state: ModuleState, date: any) {
-      state.token = date;
-      localStorage.setItem("token", date);
+    setToken(state: ModuleState, data: any) {
+      state.token = data;
+      localStorage.setItem("token", data);
     },
-    setUser(state: ModuleState, date: any) {
-      state.user = date;
+    setUser(state: ModuleState, data: any) {
+      state.user = data;
     },
-    updateIsFileSort(state: ModuleState) {
+    updataIsFileSort(state: ModuleState) {
       state.isFileSort != 3 ? ++state.isFileSort : (state.isFileSort = 1);
     },
-    setCopyFile(state: ModuleState, date: File) {
-      state.copyFile = date;
+    setPath(state: ModuleState, data: string) {
+      state.path = data;
+    },
+    setCopyFile(state: ModuleState, data: File) {
+      state.copyFile = data;
       state.isCopy = 1;
     },
-    setMoveFile(state: ModuleState, date: File) {
-      state.copyFile = date;
+    setMoveFile(state: ModuleState, data: File) {
+      state.copyFile = data;
       state.isCopy = 0;
     },
   },

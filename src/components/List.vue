@@ -21,7 +21,7 @@
           <a-menu>
             <a-menu-item key="1" @click="paste">粘贴</a-menu-item>
             <a-menu-item key="2" @click="createFolder">新建文件夹</a-menu-item>
-            <a-menu-item key="3">3rd menu item</a-menu-item>
+            <a-menu-item key="3" @click="test">3rd menu item</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -66,14 +66,14 @@
       </div>
     </div>
   </div>
-  <Upload />
+  <Upload @fileUpload="fileUpload" />
 </template>
 
 <script lang="ts">
 import { message } from "ant-design-vue";
 import "ant-design-vue/es/message/style/css";
 import { AppstoreOutlined } from "@ant-design/icons-vue";
-import { defineComponent, reactive, onBeforeMount, computed, ref } from "vue";
+import { defineComponent, reactive, onBeforeMount, computed, watch } from "vue";
 import api from "../api/api";
 import store from "../store";
 import router from "../router";
@@ -112,7 +112,13 @@ export default defineComponent({
           path = path + "/" + value.name;
         });
       }
+      store.commit("setPath", path);
+      console.log(path);
       return path;
+    });
+
+    watch(path, (newvalue) => {
+      store.commit("setPath", newvalue);
     });
 
     onBeforeMount(() => {
@@ -263,14 +269,17 @@ export default defineComponent({
       let folderName = "新建文件夹";
       let i = 0;
       do {
+        let flag = 0;
         state.folders.forEach((value: File) => {
           if (folderName == value.name) {
             ++i;
             folderName = "新建文件夹" + "(" + i + ")";
-          } else {
-            i = 0;
+            flag = 1;
           }
         });
+        if (flag == 0) {
+          i = 0;
+        }
       } while (i);
       api
         .folderCreate({
@@ -287,10 +296,10 @@ export default defineComponent({
     function fileDelete(file: File) {
       if (file.isFolder == 1) {
         let index = state.folders.lastIndexOf(file);
-        state.folders.splice(index, index);
+        console.log(state.folders.splice(index, 1));
       } else {
         let index = state.files.lastIndexOf(file);
-        state.files.splice(index, index);
+        state.files.splice(index, 1);
       }
     }
 
@@ -302,6 +311,18 @@ export default defineComponent({
         let index = state.files.lastIndexOf(file);
         state.files[index] == file;
       }
+    }
+
+    function fileUpload(file: File) {
+      if (file.isFolder == 1) {
+        state.folders.push(file);
+      } else {
+        state.files.push(file);
+      }
+    }
+
+    function test() {
+      console.log(path.value);
     }
 
     return {
@@ -320,6 +341,8 @@ export default defineComponent({
       createFolder,
       fileDelete,
       fileReName,
+      fileUpload,
+      test,
     };
   },
 });

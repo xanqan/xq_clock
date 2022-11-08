@@ -51,6 +51,7 @@ interface state {
 export default defineComponent({
   name: "Fileblock",
   props: ["file"],
+  emit: ["fileDelete", "fileReName"],
   components: { FolderTwoTone, PictureTwoTone },
   setup(props, context) {
     const state = reactive<state>({
