@@ -11,7 +11,7 @@
         >
       </a-breadcrumb>
       <div style="margin: 16px 0; flex: 1; text-align: right">
-        <appstore-outlined @click="updateIsFileSort" />
+        <appstore-outlined @click="updataIsFileSort" />
       </div>
     </div>
     <div :style="isFileSort != 3 ? listStyle : listStyle2">
@@ -112,8 +112,6 @@ export default defineComponent({
           path = path + "/" + value.name;
         });
       }
-      store.commit("setPath", path);
-      console.log(path);
       return path;
     });
 
@@ -145,8 +143,8 @@ export default defineComponent({
       }
     }
 
-    function updateIsFileSort() {
-      store.commit("updateIsFileSort");
+    function updataIsFileSort() {
+      store.commit("updataIsFileSort");
     }
 
     function enterFolder(file: any) {
@@ -334,7 +332,7 @@ export default defineComponent({
       listStyle2: {
         padding: "0",
       },
-      updateIsFileSort,
+      updataIsFileSort,
       enterFolder,
       enterPath,
       paste,

@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout style="height: 100%; width: 100%">
     <a-layout-header class="header" style="background: #05348b">
       <menu-outlined
         class="trigger"
@@ -22,7 +22,7 @@
     </a-layout-header>
     <a-layout>
       <a-layout-sider
-        style="background: #fff"
+        style="background: #fff; border-right: 1px solid #f0f0f0"
         v-model:collapsed="state.collapsed"
         :trigger="null"
       >
@@ -30,6 +30,7 @@
           v-model:selectedKeys="selectedKeys2"
           v-model:openKeys="openKeys"
           mode="inline"
+          style="border: 0"
         >
           <a-sub-menu key="sub1">
             <template #title>
