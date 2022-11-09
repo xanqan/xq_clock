@@ -10,10 +10,8 @@ export default {
   getFileList(params: any) {
     return http.get(`/file/getFileList?path=${params.path}`);
   },
-  fileUpload(path: string, params: any) {
-    return http.put(`/file/upload?path=${path}`, params, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+  fileUpload(path: string, params: any, onUploadProgress: any) {
+    return http.upload(`/file/upload?path=${path}`, params, onUploadProgress);
   },
   fileDelete(params: any) {
     return http.post(`/file/delete`, params);

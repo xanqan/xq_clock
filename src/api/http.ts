@@ -4,7 +4,7 @@ import store from "../store";
 const Axios = axios.create({
   baseURL: import.meta.env.VITE_ENV,
   withCredentials: true,
-  timeout: 5000,
+  timeout: 10000,
   headers: {
     authorization: `Bearer ${store.state.token}`,
   },
@@ -56,5 +56,14 @@ export default {
 
   delete(url: string, params: any) {
     return Axios.delete(url, { params: params });
+  },
+
+  upload(url: string, params: any, onUploadProgress: any) {
+    return Axios.request({
+      url,
+      method: "PUT",
+      data: params,
+      onUploadProgress: onUploadProgress,
+    });
   },
 };
