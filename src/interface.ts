@@ -24,3 +24,13 @@ export interface Path {
   id: number;
   name: string;
 }
+
+export interface FileProgress {
+  id: number;
+  name: string;
+  path: string;
+  type: string;
+  percent: number;
+  status: string;
+  isUpload: boolean;
+}
