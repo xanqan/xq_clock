@@ -28,6 +28,9 @@ export default {
   folderCreate(params: any) {
     return http.post(`/file/createFolder`, params);
   },
+  folderBatchCreate(params: any) {
+    return http.post(`/file/createFolderBatch`, params);
+  },
   folderDelete(params: any) {
     return http.post(`/file/deleteFolder`, params);
   },

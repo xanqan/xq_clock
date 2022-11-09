@@ -27,6 +27,14 @@
         @change="upload"
         required
       />
+      <plus-outlined @click="folderClick" /><input
+        type="file"
+        id="inputerFolder"
+        style="display: none"
+        @change="uploadFolder"
+        webkitdirectory
+        required
+      />
       <up-outlined v-if="!state.isUp" @click="state.isUp = true" />
       <down-outlined v-else @click="state.isUp = false" />
     </div>
@@ -100,6 +108,10 @@ export default defineComponent({
       document.getElementById("inputer")?.click();
     }
 
+    function folderClick() {
+      document.getElementById("inputerFolder")?.click();
+    }
+
     function upload(e: any) {
       state.isUp = true;
       const file = e.target.files[0];
@@ -144,6 +156,80 @@ export default defineComponent({
         });
     }
 
+    function uploadFolder(e: any) {
+      state.isUp = true;
+      let pathSet = new Set();
+      let files = Array.from(e.target.files).filter((value: any) => {
+        return value.name != "desktop.ini";
+      });
+      console.log(files);
+      files.forEach((value: any) => {
+        let index = value.webkitRelativePath.lastIndexOf("/");
+        if (store.state.path == "/") {
+          let path =
+            store.state.path + value.webkitRelativePath.slice(0, index);
+          value.path = path;
+          pathSet.add(path);
+        } else {
+          let path =
+            store.state.path + "/" + value.webkitRelativePath.slice(0, index);
+          value.path = path;
+          pathSet.add(path);
+        }
+      });
+      api.folderBatchCreate(Array.from(pathSet)).then((res: any) => {
+        if (res.code == 200) {
+          context.emit("fileUpload", res.data);
+          files.forEach((value: any) => {
+            const file = value;
+            const formData = new FormData();
+            formData.append("file", file);
+            const fileProgress = reactive<FileProgress>({
+              id:
+                state.fileProgress.length == 0
+                  ? 0
+                  : state.fileProgress[state.fileProgress.length - 1].id + 1,
+              name: value.name,
+              path: value.path,
+              type: "pohoe",
+              status: "active",
+              percent: 0,
+              isUpload: false,
+            });
+            state.fileProgress.push(fileProgress);
+            api
+              .fileUpload(value.path, formData, (progressEvent: any) => {
+                if (progressEvent.lengthComputable) {
+                  fileProgress.percent = Number(
+                    ((progressEvent.loaded / progressEvent.total) * 99).toFixed(
+                      2
+                    )
+                  );
+                }
+              })
+              .then((res: any) => {
+                if (res.code == 200) {
+                  state.fileProgress.forEach((value: FileProgress) => {
+                    if (
+                      value.name == res.data.name &&
+                      value.path == res.data.path
+                    ) {
+                      value.percent = 100;
+                    }
+                  });
+                  fileProgress.status = "success";
+                } else {
+                  deleteFileProgress(fileProgress);
+                }
+              })
+              .catch((res: any) => {
+                fileProgress.status = "exception";
+              });
+          });
+        }
+      });
+    }
+
     function deleteFileProgress(value: FileProgress) {
       let index = state.fileProgress.lastIndexOf(value);
       state.fileProgress.splice(index, 1);
@@ -152,7 +238,9 @@ export default defineComponent({
     return {
       state,
       fileClick,
+      folderClick,
       upload,
+      uploadFolder,
       deleteFileProgress,
     };
   },
@@ -204,6 +292,7 @@ export default defineComponent({
   border-top: 0;
   border-radius: 6px;
   background: #fff;
+  overflow-y: auto;
 }
 .name {
   display: flex;

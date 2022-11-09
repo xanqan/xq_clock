@@ -294,7 +294,7 @@ export default defineComponent({
     function fileDelete(file: File) {
       if (file.isFolder == 1) {
         let index = state.folders.lastIndexOf(file);
-        console.log(state.folders.splice(index, 1));
+        state.folders.splice(index, 1);
       } else {
         let index = state.files.lastIndexOf(file);
         state.files.splice(index, 1);
