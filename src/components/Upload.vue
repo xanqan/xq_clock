@@ -20,14 +20,23 @@
     <close-outlined @click="(state.isOpen = false), (state.isUp = false)" />
     <p style="color: #fff; margin: 0; font-size: large">上传队列</p>
     <div style="flex: 1; text-align: right">
-      <plus-outlined @click="fileClick" /><input
+      <delete-outlined v-if="state.isUp" @click="deleteAllFileProgress" />
+      <a-dropdown placement="top">
+        <plus-outlined @click="fileClick" />
+        <template #overlay>
+          <a-menu>
+            <a-menu-item @click="fileClick"> 上传文件 </a-menu-item>
+            <a-menu-item @click="folderClick"> 上传文件夹 </a-menu-item>
+          </a-menu>
+        </template> </a-dropdown
+      ><input
         type="file"
         id="inputer"
         style="display: none"
         @change="upload"
         required
       />
-      <plus-outlined @click="folderClick" /><input
+      <input
         type="file"
         id="inputerFolder"
         style="display: none"
@@ -235,6 +244,10 @@ export default defineComponent({
       state.fileProgress.splice(index, 1);
     }
 
+    function deleteAllFileProgress() {
+      state.fileProgress.length = 0;
+    }
+
     return {
       state,
       fileClick,
@@ -242,6 +255,7 @@ export default defineComponent({
       upload,
       uploadFolder,
       deleteFileProgress,
+      deleteAllFileProgress,
     };
   },
 });
