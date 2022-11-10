@@ -2,11 +2,17 @@ import { createStore } from "vuex";
 import { User, File } from "../interface";
 
 export interface ModuleState {
+  // 用户 token
   token: string | null;
+  // 登录用户信息
   user: User | null;
+  // 文件排列方式
   isFileSort: number;
+  // 现在路径
   path: string;
+  // 待拷贝（剪切）文件
   copyFile: File | undefined;
+  // 是否为复制：1为复制，0为剪切
   isCopy: number;
 }
 

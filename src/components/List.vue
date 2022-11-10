@@ -21,7 +21,6 @@
           <a-menu>
             <a-menu-item key="1" @click="paste">粘贴</a-menu-item>
             <a-menu-item key="2" @click="createFolder">新建文件夹</a-menu-item>
-            <a-menu-item key="3" @click="test">3rd menu item</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -214,6 +213,9 @@ export default defineComponent({
               if (res.code == 200) {
                 let length = state.folders.push(store.state.copyFile as File);
                 state.folders[length - 1].path = path.value;
+                message.success("粘贴成功");
+              } else {
+                message.error(res.description);
               }
             });
         } else {
@@ -227,6 +229,9 @@ export default defineComponent({
               if (res.code == 200) {
                 let length = state.files.push(store.state.copyFile as File);
                 state.files[length - 1].path = path.value;
+                message.success("粘贴成功");
+              } else {
+                message.error(res.description);
               }
             });
         }
@@ -243,6 +248,9 @@ export default defineComponent({
                 let length = state.folders.push(store.state.copyFile as File);
                 state.folders[length - 1].path = path.value;
                 store.commit("setCopyFile", state.files[length - 1]);
+                message.success("粘贴成功");
+              } else {
+                message.error(res.description);
               }
             });
         } else {
@@ -257,6 +265,9 @@ export default defineComponent({
                 let length = state.files.push(store.state.copyFile as File);
                 state.files[length - 1].path = path.value;
                 store.commit("setCopyFile", state.files[length - 1]);
+                message.success("粘贴成功");
+              } else {
+                message.error(res.description);
               }
             });
         }
@@ -319,10 +330,6 @@ export default defineComponent({
       }
     }
 
-    function test() {
-      console.log(path.value);
-    }
-
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
@@ -340,7 +347,6 @@ export default defineComponent({
       fileDelete,
       fileReName,
       fileUpload,
-      test,
     };
   },
 });

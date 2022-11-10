@@ -38,6 +38,8 @@
 </template>
 
 <script lang="ts">
+import { message } from "ant-design-vue";
+import "ant-design-vue/es/message/style/css";
 import { FolderTwoTone, PictureTwoTone } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
@@ -86,6 +88,9 @@ export default defineComponent({
           .then((res: any) => {
             if (res.code == 200) {
               context.emit("fileDelete", state.file);
+              message.success("删除成功");
+            } else {
+              message.error(res.description);
             }
           });
       } else {
@@ -97,6 +102,9 @@ export default defineComponent({
           .then((res: any) => {
             if (res.code == 200) {
               context.emit("fileDelete", state.file);
+              message.success("删除成功");
+            } else {
+              message.error(res.description);
             }
           });
       }
@@ -116,6 +124,9 @@ export default defineComponent({
             if (res.code == 200) {
               state.file.name = state.input;
               context.emit("fileReName", state.file);
+              message.success("重命名成功");
+            } else {
+              message.error(res.description);
             }
           });
       } else {
@@ -129,6 +140,9 @@ export default defineComponent({
             if (res.code == 200) {
               state.file.name = state.input;
               context.emit("fileReName", state.file);
+              message.success("重命名成功");
+            } else {
+              message.error(res.description);
             }
           });
       }
