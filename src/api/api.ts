@@ -13,6 +13,9 @@ export default {
   fileUpload(path: string, params: any, onUploadProgress: any) {
     return http.upload(`/file/upload?path=${path}`, params, onUploadProgress);
   },
+  initBigFileUpload(params: any) {
+    return http.post(`/file/initBigFileUpload`, params);
+  },
   fileDelete(params: any) {
     return http.post(`/file/delete`, params);
   },

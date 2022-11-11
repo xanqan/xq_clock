@@ -68,6 +68,7 @@
 </template>
 
 <script lang="ts">
+import SparkMD5 from "spark-md5";
 import {
   DownloadOutlined,
   CloseOutlined,
@@ -111,19 +112,11 @@ export default defineComponent({
         ? JSON.parse(localStorage.getItem("fileProgress") as string)
         : [],
       sameTimeUploadLimit: 0,
-      chunkSize: 5 * 1024 * 1024,
+      chunkSize: 2 * 1024 * 1024,
     });
 
     let uploadStart = ref<number>(0);
-
-    const fileProgressWatch = watch(
-      () => state.fileProgress,
-      (newValue) => {
-        localStorage.setItem("fileProgress", JSON.stringify(newValue));
-      }
-    );
-
-    const sameTimeUploadLimitWatch = watch(
+    watch(
       [() => state.sameTimeUploadLimit, uploadStart],
       ([newValue, uploadStart]) => {
         if (newValue >= 5) {
@@ -139,6 +132,10 @@ export default defineComponent({
         }
       }
     );
+
+    let fileProgressCache = () => {
+      localStorage.setItem("fileProgress", JSON.stringify(state.fileProgress));
+    };
 
     function fileClick() {
       state.isUp = true;
@@ -167,6 +164,7 @@ export default defineComponent({
           isUpload: false,
         });
         state.fileProgress.push(fileProgress);
+        fileProgressCache();
         uploadStart.value += 1;
       } else {
         let pathSet = new Set();
@@ -206,6 +204,7 @@ export default defineComponent({
             fileProgressList.forEach((value: FileProgress) => {
               state.fileProgress.push(value);
             });
+            fileProgressCache();
             uploadStart.value += 1;
           } else {
             message.error(res.description);
@@ -218,7 +217,7 @@ export default defineComponent({
       if (fileProgress.file.size < state.chunkSize) {
         uploadFile(fileProgress);
       } else {
-        uploadBigFile(fileProgress);
+        initUploadBigFile(fileProgress);
       }
     }
 
@@ -234,6 +233,7 @@ export default defineComponent({
             fileProgress.percent = Number(
               ((progressEvent.loaded / progressEvent.total) * 99).toFixed(2)
             );
+            fileProgressCache();
           }
         })
         .then((res: any) => {
@@ -256,20 +256,67 @@ export default defineComponent({
         })
         .finally(() => {
           state.sameTimeUploadLimit -= 1;
+          fileProgressCache();
         });
     }
 
-    function uploadBigFile(fileProgress: FileProgress) {
-      console.log(fileProgress);
+    function initUploadBigFile(fileProgress: FileProgress) {
+      let fileChunks: any[] = [];
+      let promise: any[] = [];
+      let count = 0;
+      while (count < fileProgress.file.size) {
+        fileChunks.push({
+          id: count / state.chunkSize,
+          blob: fileProgress.file.slice(count, count + state.chunkSize),
+        });
+        count += state.chunkSize;
+      }
+      let spark = new SparkMD5.ArrayBuffer();
+      fileChunks.forEach((value: any) => {
+        let p = new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsArrayBuffer(value.blob);
+          reader.onload = (e: any) => {
+            spark.append(e.target.result);
+            let md5 = spark.end();
+            value.md5 = md5;
+            resolve(value);
+          };
+        });
+        promise.push(p);
+      });
+      Promise.all(promise).then((res: any) => {
+        api
+          .initBigFileUpload({
+            path: fileProgress.path,
+            name: fileProgress.name,
+            fileChunks: res,
+          })
+          .then((res: any) => {
+            if (res.code == 200) {
+              uploadBigFile(fileProgress, fileChunks, res.data);
+            }
+          });
+      });
+    }
+
+    function uploadBigFile(
+      fileProgress: FileProgress,
+      fileChunks: any,
+      nowUpload: any
+    ) {
+      console.log(nowUpload);
     }
 
     function deleteFileProgress(value: FileProgress) {
       let index = state.fileProgress.lastIndexOf(value);
       state.fileProgress.splice(index, 1);
+      fileProgressCache();
     }
 
     function deleteAllFileProgress() {
       state.fileProgress.length = 0;
+      fileProgressCache();
     }
 
     return {
