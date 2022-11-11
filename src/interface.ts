@@ -30,6 +30,7 @@ export interface FileProgress {
   name: string;
   path: string;
   type: string;
+  file: any;
   percent: number;
   status: string;
   isUpload: boolean;
