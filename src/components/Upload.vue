@@ -20,6 +20,19 @@
     <close-outlined @click="(state.isOpen = false), (state.isUp = false)" />
     <p style="color: #fff; margin: 0; font-size: large">上传队列</p>
     <div style="flex: 1; text-align: right">
+      <a-dropdown placement="top">
+        <setting-filled />
+        <template #overlay>
+          <a-menu>
+            <a-menu-item @click="state.isSuccessHidden = true">
+              隐藏成功上传文件
+            </a-menu-item>
+            <a-menu-item @click="state.isSuccessHidden = false">
+              显示成功上传文件
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
       <delete-outlined v-if="state.isUp" @click="deleteAllFileProgress" />
       <a-dropdown placement="top">
         <plus-outlined />
@@ -49,27 +62,32 @@
     </div>
   </div>
   <div v-if="state.isUp" class="upMenu">
-    <div class="name" v-for="value in state.fileProgress" :key="value.id">
-      <picture-two-tone />
-      <div style="width: 300px">
-        <p>{{ value.name }}</p>
-        <a-progress
-          :percent="value.percent"
-          :status="value.status"
-          style="margin: 0 20px"
-        />
-      </div>
-      <div class="svg" style="flex: 1; text-align: right">
-        <redo-outlined
-          v-if="value.percent < 100"
-          @click="reUpload(value.id)"
-          style="margin-right: 10px"
-        />
-        <folder-outlined
-          @click="enterUploadPath(value.path)"
-          style="margin-right: 10px"
-        />
-        <delete-outlined @click="deleteFileProgress(value)" />
+    <div v-for="value in state.fileProgress" :key="value.id">
+      <div
+        class="name"
+        v-if="state.isSuccessHidden == false || value.status != 'success'"
+      >
+        <picture-two-tone />
+        <div style="width: 300px">
+          <p>{{ value.name }}</p>
+          <a-progress
+            :percent="value.percent"
+            :status="value.status"
+            style="margin: 0 20px"
+          />
+        </div>
+        <div class="svg" style="flex: 1; text-align: right">
+          <redo-outlined
+            v-if="value.percent < 100"
+            @click="reUpload(value.id)"
+            style="margin-right: 10px"
+          />
+          <folder-outlined
+            @click="enterUploadPath(value.path)"
+            style="margin-right: 10px"
+          />
+          <delete-outlined @click="deleteFileProgress(value)" />
+        </div>
       </div>
     </div>
   </div>
@@ -87,6 +105,7 @@ import {
   DeleteOutlined,
   FolderOutlined,
   RedoOutlined,
+  SettingFilled,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, watch } from "vue";
 import { FileProgress } from "../interface";
@@ -96,6 +115,7 @@ import { message } from "ant-design-vue";
 interface state {
   isOpen: boolean;
   isUp: boolean;
+  isSuccessHidden: boolean;
   fileProgress: FileProgress[];
   sameTimeUploadLimit: number;
   chunkSize: number;
@@ -113,11 +133,13 @@ export default defineComponent({
     DeleteOutlined,
     FolderOutlined,
     RedoOutlined,
+    SettingFilled,
   },
   setup(props, context) {
     const state = reactive<state>({
       isOpen: false,
       isUp: false,
+      isSuccessHidden: false,
       fileProgress: localStorage.getItem("fileProgress")
         ? JSON.parse(localStorage.getItem("fileProgress") as string)
         : [],
@@ -129,7 +151,7 @@ export default defineComponent({
     watch(
       [() => state.sameTimeUploadLimit, uploadStart],
       ([newValue, uploadStart]) => {
-        if (newValue >= 5) {
+        if (newValue > 5) {
           console.log("上传队列满了");
         } else {
           for (let index in state.fileProgress) {
@@ -357,7 +379,10 @@ export default defineComponent({
           api
             .bigFileUpload(
               {
-                path: fileProgress.path + fileProgress.name,
+                path:
+                  fileProgress.path == "/"
+                    ? fileProgress.path + fileProgress.name
+                    : fileProgress.path + "/" + fileProgress.name,
                 chunkId: fileChunk.id,
                 formData: formData,
               },
@@ -376,6 +401,8 @@ export default defineComponent({
             .then((res: any) => {
               if (res.code == 200) {
                 return resolve(res.data);
+              } else {
+                message.error(res.description);
               }
             })
             .finally(() => {
