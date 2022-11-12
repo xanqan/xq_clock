@@ -60,7 +60,15 @@
         />
       </div>
       <div class="svg" style="flex: 1; text-align: right">
-        <folder-outlined style="margin-right: 10px" />
+        <redo-outlined
+          v-if="value.percent < 100"
+          @click="reUpload(value.id)"
+          style="margin-right: 10px"
+        />
+        <folder-outlined
+          @click="enterUploadPath(value.path)"
+          style="margin-right: 10px"
+        />
         <delete-outlined @click="deleteFileProgress(value)" />
       </div>
     </div>
@@ -78,6 +86,7 @@ import {
   PictureTwoTone,
   DeleteOutlined,
   FolderOutlined,
+  RedoOutlined,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, watch } from "vue";
 import { FileProgress } from "../interface";
@@ -93,7 +102,7 @@ interface state {
 }
 export default defineComponent({
   name: "Upload",
-  emits: ["fileUpload"],
+  emits: ["fileUpload", "enterUploadPath"],
   components: {
     DownloadOutlined,
     CloseOutlined,
@@ -103,6 +112,7 @@ export default defineComponent({
     PictureTwoTone,
     DeleteOutlined,
     FolderOutlined,
+    RedoOutlined,
   },
   setup(props, context) {
     const state = reactive<state>({
@@ -147,9 +157,29 @@ export default defineComponent({
       document.getElementById("inputerFolder")?.click();
     }
 
+    function uploadReadSize(fileProgress: FileProgress) {
+      if (fileProgress.file.size < state.chunkSize) {
+        uploadFile(fileProgress);
+      } else {
+        initUploadBigFile(fileProgress);
+      }
+    }
+
     function upload(e: any) {
       if (e.target.files.length == 1) {
         const file = e.target.files[0];
+        let f = state.fileProgress.find(
+          (value: FileProgress) =>
+            value.name == file.name && value.path == store.state.path
+        );
+        if (f != undefined) {
+          if (f.percent == 100) {
+            message.success(file.name + "上传记录已存在");
+            return;
+          }
+          let index = state.fileProgress.lastIndexOf(f);
+          state.fileProgress.splice(index, 1);
+        }
         const fileProgress = reactive<FileProgress>({
           id:
             state.fileProgress.length == 0
@@ -213,14 +243,6 @@ export default defineComponent({
       }
     }
 
-    function uploadReadSize(fileProgress: FileProgress) {
-      if (fileProgress.file.size < state.chunkSize) {
-        uploadFile(fileProgress);
-      } else {
-        initUploadBigFile(fileProgress);
-      }
-    }
-
     function uploadFile(fileProgress: FileProgress) {
       const file = fileProgress.file;
       const formData = new FormData();
@@ -228,14 +250,17 @@ export default defineComponent({
       fileProgress.isUpload = true;
       state.sameTimeUploadLimit += 1;
       api
-        .fileUpload(fileProgress.path, formData, (progressEvent: any) => {
-          if (progressEvent.lengthComputable) {
-            fileProgress.percent = Number(
-              ((progressEvent.loaded / progressEvent.total) * 99).toFixed(2)
-            );
-            fileProgressCache();
+        .fileUpload(
+          { path: fileProgress.path, formData: formData },
+          (progressEvent: any) => {
+            if (progressEvent.lengthComputable) {
+              fileProgress.percent = Number(
+                ((progressEvent.loaded / progressEvent.total) * 99).toFixed(2)
+              );
+              fileProgressCache();
+            }
           }
-        })
+        )
         .then((res: any) => {
           if (res.code == 200) {
             if (res.data.path == store.state.path) {
@@ -294,6 +319,12 @@ export default defineComponent({
           })
           .then((res: any) => {
             if (res.code == 200) {
+              fileProgress.percent = Number(
+                (
+                  ((fileChunks.length - res.data.length) / fileChunks.length) *
+                  99
+                ).toFixed(2)
+              );
               uploadBigFile(fileProgress, fileChunks, res.data);
             }
           });
@@ -305,7 +336,62 @@ export default defineComponent({
       fileChunks: any,
       nowUpload: any
     ) {
-      console.log(nowUpload);
+      fileProgress.isUpload = true;
+      state.sameTimeUploadLimit += 1;
+      uploadBigFileItem(fileProgress, fileChunks, nowUpload, 0);
+    }
+
+    async function uploadBigFileItem(
+      fileProgress: FileProgress,
+      fileChunks: any,
+      nowUpload: any,
+      i: number
+    ) {
+      const res_1 = await new Promise((resolve, reject) => {
+        if (i >= nowUpload.length) {
+          return resolve(undefined);
+        } else {
+          let fileChunk = fileChunks.find((e: any) => e.id == nowUpload[i].id);
+          const formData = new FormData();
+          formData.append("file", fileChunk.blob);
+          api
+            .bigFileUpload(
+              {
+                path: fileProgress.path + fileProgress.name,
+                chunkId: fileChunk.id,
+                formData: formData,
+              },
+              (progressEvent: any) => {
+                if (progressEvent.lengthComputable) {
+                  fileProgress.percent +=
+                    Number(
+                      (
+                        (progressEvent.loaded / progressEvent.total) *
+                        99
+                      ).toFixed(2)
+                    ) / fileChunks.length;
+                }
+              }
+            )
+            .then((res: any) => {
+              if (res.code == 200) {
+                return resolve(res.data);
+              }
+            })
+            .finally(() => {
+              fileProgressCache();
+            });
+        }
+      });
+      if (res_1 != undefined) {
+        uploadBigFileItem(fileProgress, fileChunks, nowUpload, ++i);
+      } else {
+        // TODO 合并请求发送
+        fileProgress.status = "success";
+        fileProgress.percent = 100;
+        fileProgressCache();
+        state.sameTimeUploadLimit -= 1;
+      }
     }
 
     function deleteFileProgress(value: FileProgress) {
@@ -319,6 +405,14 @@ export default defineComponent({
       fileProgressCache();
     }
 
+    function enterUploadPath(path: string) {
+      context.emit("enterUploadPath", path);
+    }
+
+    function reUpload(id: number) {
+      fileClick();
+    }
+
     return {
       state,
       fileClick,
@@ -326,6 +420,8 @@ export default defineComponent({
       upload,
       deleteFileProgress,
       deleteAllFileProgress,
+      enterUploadPath,
+      reUpload,
     };
   },
 });

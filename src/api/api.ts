@@ -10,11 +10,22 @@ export default {
   getFileList(params: any) {
     return http.get(`/file/getFileList?path=${params.path}`);
   },
-  fileUpload(path: string, params: any, onUploadProgress: any) {
-    return http.upload(`/file/upload?path=${path}`, params, onUploadProgress);
+  fileUpload(params: any, onUploadProgress: any) {
+    return http.upload(
+      `/file/upload?path=${params.path}`,
+      params.formData,
+      onUploadProgress
+    );
   },
   initBigFileUpload(params: any) {
     return http.post(`/file/initBigFileUpload`, params);
+  },
+  bigFileUpload(params: any, onUploadProgress: any) {
+    return http.upload(
+      `/file/bigFileUpload?path=${params.path}&chunkId=${params.chunkId}`,
+      params.formData,
+      onUploadProgress
+    );
   },
   fileDelete(params: any) {
     return http.post(`/file/delete`, params);

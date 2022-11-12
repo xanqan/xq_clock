@@ -65,7 +65,7 @@
       </div>
     </div>
   </div>
-  <Upload @fileUpload="fileUpload" />
+  <Upload @fileUpload="fileUpload" @enterUploadPath="enterUploadPath" />
 </template>
 
 <script lang="ts">
@@ -172,15 +172,19 @@ export default defineComponent({
         });
     }
 
-    function enterPath(id: number) {
+    function enterPath(id: any) {
       let path = "/";
-      if (id < 0) {
-        console.log("Home");
-      } else {
-        for (let i = 0; i < id; ++i) {
-          path = path + state.paths[i].name + "/";
+      if (typeof id == "number") {
+        if (id < 0) {
+          console.log("Home");
+        } else {
+          for (let i = 0; i < id; ++i) {
+            path = path + state.paths[i].name + "/";
+          }
+          path = path + state.paths[id].name;
         }
-        path = path + state.paths[id].name;
+      } else {
+        path = id;
       }
       api
         .getFileList({
@@ -330,6 +334,10 @@ export default defineComponent({
       }
     }
 
+    function enterUploadPath(path: string) {
+      enterPath(path);
+    }
+
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
@@ -347,6 +355,7 @@ export default defineComponent({
       fileDelete,
       fileReName,
       fileUpload,
+      enterUploadPath,
     };
   },
 });
