@@ -144,7 +144,7 @@ export default defineComponent({
         ? JSON.parse(localStorage.getItem("fileProgress") as string)
         : [],
       sameTimeUploadLimit: 0,
-      chunkSize: 2 * 1024 * 1024,
+      chunkSize: 5 * 1024 * 1024,
     });
 
     let uploadStart = ref<number>(0);
@@ -288,11 +288,7 @@ export default defineComponent({
             if (res.data.path == store.state.path) {
               context.emit("fileUpload", res.data);
             }
-            state.fileProgress.forEach((value: FileProgress) => {
-              if (value.name == res.data.name && value.path == res.data.path) {
-                value.percent = 100;
-              }
-            });
+            fileProgress.percent = 100;
             fileProgress.status = "success";
           } else {
             deleteFileProgress(fileProgress);
@@ -410,10 +406,10 @@ export default defineComponent({
             });
         }
       });
-      if (res_1 != undefined) {
+      if (res_1 == null) {
         uploadBigFileItem(fileProgress, fileChunks, nowUpload, ++i);
       } else {
-        // TODO 合并请求发送
+        context.emit("fileUpload", res_1);
         fileProgress.status = "success";
         fileProgress.percent = 100;
         fileProgressCache();

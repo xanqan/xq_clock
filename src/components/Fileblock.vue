@@ -62,13 +62,21 @@ export default defineComponent({
       input: props.file.name,
     });
 
+    // state.src =
+    //   "http://121.196.210.13:9000" +
+    //   "/xq" +
+    //   store.state.user?.id +
+    //   state.file.path +
+    //   "/" +
+    //   state.file.name;
+
     state.src =
       "http://121.196.210.13:9000" +
       "/xq" +
       store.state.user?.id +
-      state.file.path +
       "/" +
-      state.file.name;
+      state.file.id +
+      ".jpg";
 
     function setCopyFile() {
       store.commit("setCopyFile", state.file);
