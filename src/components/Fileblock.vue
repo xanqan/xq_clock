@@ -13,7 +13,29 @@
     </div>
     <div v-else class="file">
       <div v-if="isFileSort == 1" class="img">
-        <img style="object-fit: cover" :src="state.src" />
+        <img
+          v-if="state.file.type == 'photo'"
+          style="object-fit: cover"
+          :src="state.src"
+          @click="state.visible = true"
+        />
+        <a-image
+          v-if="state.file.type == 'photo' && state.visible"
+          :width="200"
+          :style="{ display: 'none' }"
+          :preview="{
+            visible: state.visible,
+            onVisibleChange: setVisible,
+          }"
+          :src="state.imgSrc"
+        />
+        <video
+          v-if="state.file.type == 'video'"
+          style="width: 100%; height: 100%"
+          controls
+        >
+          <source :src="state.src" type="video/mp4" />
+        </video>
       </div>
       <div class="name">
         <picture-two-tone />
@@ -45,10 +67,13 @@ import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
 import { File } from "../interface";
 import store from "../store";
+import findType from "../hook/findType";
 interface state {
   file: File;
   src: string | undefined;
+  imgSrc: string | undefined;
   input: string;
+  visible: boolean;
 }
 export default defineComponent({
   name: "Fileblock",
@@ -59,24 +84,41 @@ export default defineComponent({
     const state = reactive<state>({
       file: props.file,
       src: undefined,
+      imgSrc: undefined,
       input: props.file.name,
+      visible: false,
     });
 
-    // state.src =
-    //   "http://121.196.210.13:9000" +
-    //   "/xq" +
-    //   store.state.user?.id +
-    //   state.file.path +
-    //   "/" +
-    //   state.file.name;
+    state.file.type = findType(state.file.type);
 
-    state.src =
-      "http://121.196.210.13:9000" +
-      "/xq" +
-      store.state.user?.id +
-      "/" +
-      state.file.id +
-      ".jpg";
+    if (state.file.type == "photo") {
+      state.src =
+        "http://121.196.210.13:9000" +
+        "/xq" +
+        store.state.user?.id +
+        "/thumbnail" +
+        state.file.id +
+        ".jpg";
+      state.imgSrc =
+        "http://121.196.210.13:9000" +
+        "/xq" +
+        store.state.user?.id +
+        state.file.path +
+        "/" +
+        state.file.name;
+    } else {
+      state.src =
+        "http://121.196.210.13:9000" +
+        "/xq" +
+        store.state.user?.id +
+        state.file.path +
+        "/" +
+        state.file.name;
+    }
+
+    function setVisible(value: any) {
+      state.visible = value;
+    }
 
     function setCopyFile() {
       store.commit("setCopyFile", state.file);
@@ -159,6 +201,7 @@ export default defineComponent({
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
+      setVisible,
       setCopyFile,
       setMoveFile,
       fileDelete,
