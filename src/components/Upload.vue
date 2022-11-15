@@ -69,7 +69,15 @@
       >
         <picture-two-tone />
         <div style="width: 300px">
-          <p>{{ value.name }}</p>
+          <p
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            {{ value.name }}
+          </p>
           <a-progress
             :percent="value.percent"
             :status="value.status"

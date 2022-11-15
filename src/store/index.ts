@@ -14,6 +14,8 @@ export interface ModuleState {
   copyFile: File | undefined;
   // 是否为复制：1为复制，0为剪切
   isCopy: number;
+  isAudioFixed: boolean;
+  audioFixedSrc: string;
 }
 
 export default createStore({
@@ -24,6 +26,8 @@ export default createStore({
     path: "/",
     copyFile: undefined,
     isCopy: 1,
+    isAudioFixed: false,
+    audioFixedSrc: "",
   }),
   mutations: {
     setToken(state: ModuleState, data: any) {
@@ -46,6 +50,14 @@ export default createStore({
     setMoveFile(state: ModuleState, data: File) {
       state.copyFile = data;
       state.isCopy = 0;
+    },
+    audioFixed(state: ModuleState, data: string) {
+      state.isAudioFixed = true;
+      state.audioFixedSrc = data;
+    },
+    audioFixedClose(state: ModuleState) {
+      state.isAudioFixed = false;
+      state.audioFixedSrc = "";
     },
   },
   actions: {},

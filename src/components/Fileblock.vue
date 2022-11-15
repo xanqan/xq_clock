@@ -36,6 +36,13 @@
         >
           <source :src="state.src" type="video/mp4" />
         </video>
+        <div
+          class="audio"
+          v-if="state.file.type == 'audio'"
+          @click="audioFixed"
+        >
+          <customer-service-two-tone />
+        </div>
       </div>
       <div class="name">
         <picture-two-tone />
@@ -62,7 +69,11 @@
 <script lang="ts">
 import { message } from "ant-design-vue";
 import "ant-design-vue/es/message/style/css";
-import { FolderTwoTone, PictureTwoTone } from "@ant-design/icons-vue";
+import {
+  FolderTwoTone,
+  PictureTwoTone,
+  CustomerServiceTwoTone,
+} from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
 import { File } from "../interface";
@@ -70,7 +81,7 @@ import store from "../store";
 import findType from "../hook/findType";
 interface state {
   file: File;
-  src: string | undefined;
+  src: string;
   imgSrc: string | undefined;
   input: string;
   visible: boolean;
@@ -79,11 +90,15 @@ export default defineComponent({
   name: "Fileblock",
   props: ["file"],
   emit: ["fileDelete", "fileReName"],
-  components: { FolderTwoTone, PictureTwoTone },
+  components: {
+    FolderTwoTone,
+    PictureTwoTone,
+    CustomerServiceTwoTone,
+  },
   setup(props, context) {
     const state = reactive<state>({
       file: props.file,
-      src: undefined,
+      src: "",
       imgSrc: undefined,
       input: props.file.name,
       visible: false,
@@ -198,6 +213,10 @@ export default defineComponent({
       }
     }
 
+    function audioFixed() {
+      store.commit("audioFixed", state!.src);
+    }
+
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
@@ -206,6 +225,7 @@ export default defineComponent({
       setMoveFile,
       fileDelete,
       rename,
+      audioFixed,
     };
   },
 });
@@ -246,5 +266,13 @@ export default defineComponent({
 .img img {
   width: 100%;
   height: 100%;
+}
+.audio {
+  padding: 45px 70px;
+}
+
+.audio >>> svg {
+  width: 4em;
+  height: 4em;
 }
 </style>

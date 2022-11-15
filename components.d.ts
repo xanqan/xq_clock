@@ -27,6 +27,8 @@ declare module '@vue/runtime-core' {
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
+    Audio: typeof import('./src/components/Audio.vue')['default']
+    AudioFixed: typeof import('./src/components/AudioFixed.vue')['default']
     Favorites: typeof import('./src/components/Favorites.vue')['default']
     Fileblock: typeof import('./src/components/Fileblock.vue')['default']
     FileLine: typeof import('./src/components/FileLine.vue')['default']

@@ -57,15 +57,16 @@
       </div>
       <div v-if="isFileSort == 3">
         <div v-for="file in state.folders" :key="file.id">
-          <FileLime :file="file" @click="enterFolder(file)" />
+          <FileLine :file="file" @click="enterFolder(file)" />
         </div>
         <div v-for="file in state.files" :key="file.id">
-          <FileLime :file="file" />
+          <FileLine :file="file" />
         </div>
       </div>
     </div>
   </div>
   <Upload @fileUpload="fileUpload" @enterUploadPath="enterUploadPath" />
+  <AudioFixed v-if="isAudioFixed" />
 </template>
 
 <script lang="ts">
@@ -79,7 +80,8 @@ import router from "../router";
 import { Path, File } from "../interface";
 import Upload from "./Upload.vue";
 import Fileblock from "./Fileblock.vue";
-import FileLime from "./FileLine.vue";
+import FileLine from "./FileLine.vue";
+import AudioFixed from "./AudioFixed.vue";
 interface state {
   paths: Path[];
   fileInfos: File[];
@@ -90,8 +92,9 @@ export default defineComponent({
   name: "List",
   components: {
     Upload,
+    AudioFixed,
     Fileblock,
-    FileLime,
+    FileLine,
     AppstoreOutlined,
   },
   setup() {
@@ -341,6 +344,7 @@ export default defineComponent({
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
+      isAudioFixed: computed(() => store.state.isAudioFixed),
       listStyle: {
         padding: "0 24px",
       },
