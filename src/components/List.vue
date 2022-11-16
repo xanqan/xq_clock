@@ -67,6 +67,7 @@
   </div>
   <Upload @fileUpload="fileUpload" @enterUploadPath="enterUploadPath" />
   <AudioFixed v-if="isAudioFixed" />
+  <TextFixed v-if="isTextFixed" />
 </template>
 
 <script lang="ts">
@@ -82,6 +83,7 @@ import Upload from "./Upload.vue";
 import Fileblock from "./Fileblock.vue";
 import FileLine from "./FileLine.vue";
 import AudioFixed from "./AudioFixed.vue";
+import TextFixed from "./TextFixed.vue";
 interface state {
   paths: Path[];
   fileInfos: File[];
@@ -93,6 +95,7 @@ export default defineComponent({
   components: {
     Upload,
     AudioFixed,
+    TextFixed,
     Fileblock,
     FileLine,
     AppstoreOutlined,
@@ -345,6 +348,7 @@ export default defineComponent({
       state,
       isFileSort: computed(() => store.state.isFileSort),
       isAudioFixed: computed(() => store.state.isAudioFixed),
+      isTextFixed: computed(() => store.state.isTextFixed),
       listStyle: {
         padding: "0 24px",
       },

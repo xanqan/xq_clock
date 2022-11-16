@@ -37,11 +37,18 @@
           <source :src="state.src" type="video/mp4" />
         </video>
         <div
-          class="audio"
+          class="fileImg"
           v-if="state.file.type == 'audio'"
           @click="audioFixed"
         >
           <customer-service-two-tone />
+        </div>
+        <div
+          class="fileImg"
+          v-if="state.file.type == 'text'"
+          @click="textFixed"
+        >
+          <file-word-outlined />
         </div>
       </div>
       <div class="name">
@@ -73,6 +80,7 @@ import {
   FolderTwoTone,
   PictureTwoTone,
   CustomerServiceTwoTone,
+  FileWordOutlined,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
@@ -94,6 +102,7 @@ export default defineComponent({
     FolderTwoTone,
     PictureTwoTone,
     CustomerServiceTwoTone,
+    FileWordOutlined,
   },
   setup(props, context) {
     const state = reactive<state>({
@@ -217,6 +226,10 @@ export default defineComponent({
       store.commit("audioFixed", state!.src);
     }
 
+    function textFixed() {
+      store.commit("textFixed", state!.src);
+    }
+
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
@@ -226,6 +239,7 @@ export default defineComponent({
       fileDelete,
       rename,
       audioFixed,
+      textFixed,
     };
   },
 });
@@ -267,11 +281,11 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
-.audio {
+.fileImg {
   padding: 45px 70px;
 }
 
-.audio >>> svg {
+.fileImg >>> svg {
   width: 4em;
   height: 4em;
 }

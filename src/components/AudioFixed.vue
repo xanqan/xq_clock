@@ -20,10 +20,8 @@ interface state {
 }
 export default defineComponent({
   name: "AudioFixed",
-  props: ["audioFixedSrc"],
-  emits: ["audioFixedClose"],
   components: { CloseOutlined },
-  setup(props, context) {
+  setup() {
     const state = reactive<state>({
       src: store.state.audioFixedSrc,
     });

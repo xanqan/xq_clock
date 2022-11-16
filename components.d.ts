@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     List: typeof import('./src/components/List.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TextFixed: typeof import('./src/components/TextFixed.vue')['default']
     Upload: typeof import('./src/components/Upload.vue')['default']
   }
 }

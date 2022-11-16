@@ -65,7 +65,7 @@
         </a-menu>
       </a-layout-sider>
       <a-layout>
-        <a-layout-content style="background-color: #fff">
+        <a-layout-content style="background-color: #fff; position: relative">
           <router-view />
         </a-layout-content>
       </a-layout>

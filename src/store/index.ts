@@ -16,6 +16,8 @@ export interface ModuleState {
   isCopy: number;
   isAudioFixed: boolean;
   audioFixedSrc: string;
+  isTextFixed: boolean;
+  textFixedSrc: string;
 }
 
 export default createStore({
@@ -28,6 +30,8 @@ export default createStore({
     isCopy: 1,
     isAudioFixed: false,
     audioFixedSrc: "",
+    isTextFixed: false,
+    textFixedSrc: "",
   }),
   mutations: {
     setToken(state: ModuleState, data: any) {
@@ -58,6 +62,14 @@ export default createStore({
     audioFixedClose(state: ModuleState) {
       state.isAudioFixed = false;
       state.audioFixedSrc = "";
+    },
+    textFixed(state: ModuleState, data: string) {
+      state.isTextFixed = true;
+      state.textFixedSrc = data;
+    },
+    textFixedClose(state: ModuleState) {
+      state.isTextFixed = false;
+      state.textFixedSrc = "";
     },
   },
   actions: {},
