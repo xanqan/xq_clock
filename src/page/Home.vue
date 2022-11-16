@@ -27,41 +27,40 @@
         :trigger="null"
       >
         <a-menu
-          v-model:selectedKeys="selectedKeys2"
           v-model:openKeys="openKeys"
+          v-model:selectedKeys="selectedKeys"
           mode="inline"
-          style="border: 0"
+          class="menu"
         >
           <a-sub-menu key="sub1">
             <template #title>
-              <user-outlined />
-              <span> subnav 1 </span>
+              <folder-open-outlined />
+              <span> 我的文件 </span>
             </template>
-            <a-menu-item key="1" @click="Option_1">option1</a-menu-item>
-            <a-menu-item key="2">option2</a-menu-item>
-            <a-menu-item key="3">option3</a-menu-item>
-            <a-menu-item key="4">option4</a-menu-item>
+            <a-menu-item key="1" @click="Option_1"
+              ><camera-outlined /><span>全部文件</span></a-menu-item
+            >
+            <a-menu-item key="2"
+              ><camera-outlined /><span>视频</span></a-menu-item
+            >
+            <a-menu-item key="3"
+              ><picture-outlined /><span>图片</span></a-menu-item
+            >
+            <a-menu-item key="4"
+              ><customer-service-outlined /><span>音频</span></a-menu-item
+            >
+            <a-menu-item key="5"
+              ><file-word-outlined /><span>文档</span></a-menu-item
+            >
           </a-sub-menu>
-          <a-sub-menu key="sub2">
-            <template #title>
-              <laptop-outlined />
-              <span> subnav 2 </span>
-            </template>
-            <a-menu-item key="5" @click="Option_2">option5</a-menu-item>
-            <a-menu-item key="6">option6</a-menu-item>
-            <a-menu-item key="7">option7</a-menu-item>
-            <a-menu-item key="8">option8</a-menu-item>
-          </a-sub-menu>
-          <a-sub-menu key="sub3">
-            <template #title>
-              <notification-outlined />
-              <span> subnav 3 </span>
-            </template>
-            <a-menu-item key="9">option9</a-menu-item>
-            <a-menu-item key="10">option10</a-menu-item>
-            <a-menu-item key="11">option11</a-menu-item>
-            <a-menu-item key="12">option12</a-menu-item>
-          </a-sub-menu>
+          <a-menu-item key="sub2">
+            <laptop-outlined />
+            <span> 我的分享 </span>
+          </a-menu-item>
+          <a-menu-item key="sub3">
+            <notification-outlined />
+            <span> 容量配额 </span>
+          </a-menu-item>
         </a-menu>
       </a-layout-sider>
       <a-layout>
@@ -75,11 +74,16 @@
 
 <script lang="ts">
 import {
+  FolderOpenOutlined,
   UserOutlined,
   LaptopOutlined,
   NotificationOutlined,
   MenuOutlined,
   SettingFilled,
+  FileWordOutlined,
+  CameraOutlined,
+  PictureOutlined,
+  CustomerServiceOutlined,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref } from "vue";
 import router from "../router";
@@ -90,11 +94,16 @@ interface state {
 export default defineComponent({
   name: "Home",
   components: {
+    FolderOpenOutlined,
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
     MenuOutlined,
     SettingFilled,
+    FileWordOutlined,
+    CameraOutlined,
+    PictureOutlined,
+    CustomerServiceOutlined,
   },
   setup() {
     const state = reactive<state>({
@@ -122,9 +131,8 @@ export default defineComponent({
       Option_1,
       Option_2,
       logout,
-      selectedKeys1: ref<string[]>(["2"]),
-      selectedKeys2: ref<string[]>(["1"]),
       openKeys: ref<string[]>(["sub1"]),
+      selectedKeys: ref<string[]>(["1"]),
     };
   },
 });
@@ -148,6 +156,10 @@ export default defineComponent({
 .topMenu >>> svg {
   width: 1.5em;
   height: 1.5em;
+}
+.menu >>> svg {
+  width: 1.3em;
+  height: 1.3em;
 }
 .logo {
   color: #fff;

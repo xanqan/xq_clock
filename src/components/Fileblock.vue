@@ -52,7 +52,10 @@
         </div>
       </div>
       <div class="name">
-        <picture-two-tone />
+        <picture-two-tone v-if="state.file.type == 'photo'" />
+        <camera-two-tone v-if="state.file.type == 'video'" />
+        <customer-service-two-tone v-if="state.file.type == 'audio'" />
+        <file-word-two-tone v-if="state.file.type == 'text'" />
         <a-input
           v-model:value="state.input"
           :bordered="false"
@@ -81,6 +84,8 @@ import {
   PictureTwoTone,
   CustomerServiceTwoTone,
   FileWordOutlined,
+  FileWordTwoTone,
+  CameraTwoTone,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
@@ -103,6 +108,8 @@ export default defineComponent({
     PictureTwoTone,
     CustomerServiceTwoTone,
     FileWordOutlined,
+    FileWordTwoTone,
+    CameraTwoTone,
   },
   setup(props, context) {
     const state = reactive<state>({
