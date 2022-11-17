@@ -131,7 +131,6 @@ export default defineComponent({
           state.fileInfos = res.data.files;
           state.fileInfos.forEach(classify);
         } else if (res.code == 40402) {
-          console.log(res.message);
           store.commit("setToken", "");
           router.push("/login");
         } else {

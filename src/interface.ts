@@ -13,6 +13,7 @@ export interface File {
   path: string | undefined;
   fileSize: number | undefined;
   type: string | undefined;
+  contentType: string | undefined;
   createTime: string | undefined;
   modifyTime: string | undefined;
   size: string | undefined;

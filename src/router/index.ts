@@ -19,9 +19,9 @@ const routes = [
         component: () => import("../components/List.vue"),
       },
       {
-        path: "favorites",
-        name: "Favorites",
-        component: () => import("../components/Favorites.vue"),
+        path: "typeList/:type",
+        name: "typeList",
+        component: () => import("../components/TypeList.vue"),
       },
     ],
   },

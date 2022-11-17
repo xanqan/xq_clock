@@ -37,19 +37,19 @@
               <folder-open-outlined />
               <span> 我的文件 </span>
             </template>
-            <a-menu-item key="1" @click="Option_1"
+            <a-menu-item key="1" @click="home"
               ><camera-outlined /><span>全部文件</span></a-menu-item
             >
-            <a-menu-item key="2"
+            <a-menu-item key="2" @click="typeFile(`video`)"
               ><camera-outlined /><span>视频</span></a-menu-item
             >
-            <a-menu-item key="3"
+            <a-menu-item key="3" @click="typeFile(`photo`)"
               ><picture-outlined /><span>图片</span></a-menu-item
             >
-            <a-menu-item key="4"
+            <a-menu-item key="4" @click="typeFile(`audio`)"
               ><customer-service-outlined /><span>音频</span></a-menu-item
             >
-            <a-menu-item key="5"
+            <a-menu-item key="5" @click="typeFile(`text`)"
               ><file-word-outlined /><span>文档</span></a-menu-item
             >
           </a-sub-menu>
@@ -111,14 +111,12 @@ export default defineComponent({
       collapsed: false,
     });
 
-    function Option_1() {
-      console.log("Option_1");
-      router.push(`/home`);
+    function home() {
+      router.push({ name: "List" });
     }
 
-    function Option_2() {
-      console.log("Option_2");
-      router.push(`/home/favorites`);
+    function typeFile(type: string) {
+      router.push({ name: "typeList", params: { type: type } });
     }
 
     function logout() {
@@ -128,8 +126,8 @@ export default defineComponent({
 
     return {
       state,
-      Option_1,
-      Option_2,
+      home,
+      typeFile,
       logout,
       openKeys: ref<string[]>(["sub1"]),
       selectedKeys: ref<string[]>(["1"]),

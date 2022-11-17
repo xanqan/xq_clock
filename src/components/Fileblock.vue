@@ -91,7 +91,6 @@ import { defineComponent, reactive, ref, computed } from "vue";
 import api from "../api/api";
 import { File } from "../interface";
 import store from "../store";
-import findType from "../hook/findType";
 interface state {
   file: File;
   src: string;
@@ -119,8 +118,6 @@ export default defineComponent({
       input: props.file.name,
       visible: false,
     });
-
-    state.file.type = findType(state.file.type);
 
     if (state.file.type == "photo") {
       state.src =

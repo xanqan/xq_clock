@@ -7,6 +7,11 @@ export default {
   home() {
     return http.get("/pageInit/home");
   },
+  getFileListByType(params: any) {
+    return http.get(
+      `/file/getFileListByType?page=${params.page}&rows=${params.rows}&type=${params.type}`
+    );
+  },
   getFileList(params: any) {
     return http.get(`/file/getFileList?path=${params.path}`);
   },
