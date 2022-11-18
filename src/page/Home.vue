@@ -22,7 +22,7 @@
     </a-layout-header>
     <a-layout>
       <a-layout-sider
-        style="background: #fff; border-right: 1px solid #f0f0f0"
+        class="a-layout-sider"
         v-model:collapsed="state.collapsed"
         :trigger="null"
       >
@@ -62,6 +62,7 @@
             <span> 容量配额 </span>
           </a-menu-item>
         </a-menu>
+        <UserSize />
       </a-layout-sider>
       <a-layout>
         <a-layout-content style="background-color: #fff; position: relative">
@@ -87,6 +88,7 @@ import {
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref } from "vue";
 import router from "../router";
+import UserSize from "../components/UserSize.vue";
 interface state {
   selectedKeys: string[];
   collapsed: boolean;
@@ -94,6 +96,7 @@ interface state {
 export default defineComponent({
   name: "Home",
   components: {
+    UserSize,
     FolderOpenOutlined,
     UserOutlined,
     LaptopOutlined,
@@ -163,5 +166,15 @@ export default defineComponent({
   color: #fff;
   font-size: xx-large;
   margin: 0 0 10px 20px;
+}
+.a-layout-sider {
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
+  position: relative;
+}
+.a-layout-sider {
+  height: 100%;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
 }
 </style>

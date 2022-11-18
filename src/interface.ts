@@ -3,8 +3,8 @@ export interface User {
   name: string | undefined;
   nickName: string | undefined;
   avatar: string | undefined;
-  sizeMax: number | undefined;
-  sizeUse: number | undefined;
+  sizeMax: number;
+  sizeUse: number;
 }
 
 export interface File {

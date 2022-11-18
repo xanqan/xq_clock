@@ -43,7 +43,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   position: fixed;
-  bottom: 30px;
-  left: 5px;
+  top: 120px;
+  right: 5px;
 }
 </style>

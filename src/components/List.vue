@@ -2,8 +2,11 @@
   <div class="gutter-example">
     <div class="listTop">
       <a-breadcrumb style="margin: 16px 0">
-        <a-breadcrumb-item @click="enterPath(-1)">Home</a-breadcrumb-item>
+        <a-breadcrumb-item class="ant-breadcrumb-link" @click="enterPath(-1)"
+          >Home</a-breadcrumb-item
+        >
         <a-breadcrumb-item
+          class="ant-breadcrumb-link"
           v-for="path in state.paths"
           :key="path.id"
           @click="enterPath(path.id)"
@@ -388,5 +391,12 @@ export default defineComponent({
 }
 .list {
   padding: 0 24px;
+}
+
+.ant-breadcrumb-link {
+  cursor: pointer;
+}
+.ant-breadcrumb-link:hover {
+  color: #40a9ff;
 }
 </style>

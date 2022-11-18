@@ -33,6 +33,7 @@
           v-if="state.file.type == 'video'"
           style="width: 100%; height: 100%"
           controls
+          preload="none"
         >
           <source :src="state.src" type="video/mp4" />
         </video>
