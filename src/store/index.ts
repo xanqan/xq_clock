@@ -18,6 +18,8 @@ export interface ModuleState {
   audioFixedSrc: string;
   isTextFixed: boolean;
   textFixedSrc: string;
+  isShareFixed: boolean;
+  shareFile: File | undefined;
 }
 
 export default createStore({
@@ -32,6 +34,8 @@ export default createStore({
     audioFixedSrc: "",
     isTextFixed: false,
     textFixedSrc: "",
+    isShareFixed: false,
+    shareFile: undefined,
   }),
   mutations: {
     setToken(state: ModuleState, data: any) {
@@ -70,6 +74,14 @@ export default createStore({
     textFixedClose(state: ModuleState) {
       state.isTextFixed = false;
       state.textFixedSrc = "";
+    },
+    shareFixed(state: ModuleState, data: File) {
+      state.isShareFixed = true;
+      state.shareFile = data;
+    },
+    shareFixedClose(state: ModuleState) {
+      state.isShareFixed = false;
+      state.shareFile = undefined;
     },
   },
   actions: {},

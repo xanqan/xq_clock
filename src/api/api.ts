@@ -62,4 +62,10 @@ export default {
   folderCopy(params: any) {
     return http.put(`/file/copyFolder`, params);
   },
+  sharecreate(params: any) {
+    return http.post(`/file/createShareUrl`, params);
+  },
+  getShareUrlAll() {
+    return http.get(`/file/getShareUrlAll`);
+  },
 };

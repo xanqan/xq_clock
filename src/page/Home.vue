@@ -53,7 +53,7 @@
               ><file-word-outlined /><span>文档</span></a-menu-item
             >
           </a-sub-menu>
-          <a-menu-item key="sub2">
+          <a-menu-item key="sub2" @click="shareList">
             <laptop-outlined />
             <span> 我的分享 </span>
           </a-menu-item>
@@ -122,6 +122,10 @@ export default defineComponent({
       router.push({ name: "typeList", params: { type: type } });
     }
 
+    function shareList(type: string) {
+      router.push({ name: "shareList" });
+    }
+
     function logout() {
       localStorage.clear();
       router.push(`/login`);
@@ -131,6 +135,7 @@ export default defineComponent({
       state,
       home,
       typeFile,
+      shareList,
       logout,
       openKeys: ref<string[]>(["sub1"]),
       selectedKeys: ref<string[]>(["1"]),

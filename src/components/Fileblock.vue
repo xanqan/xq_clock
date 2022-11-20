@@ -72,6 +72,7 @@
         <a-menu-item key="1" @click="setCopyFile">复制</a-menu-item>
         <a-menu-item key="2" @click="setMoveFile">剪切</a-menu-item>
         <a-menu-item key="2" @click="fileDelete">删除</a-menu-item>
+        <a-menu-item key="2" @click="shareFixed">分享</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -235,6 +236,10 @@ export default defineComponent({
       store.commit("textFixed", state!.src);
     }
 
+    function shareFixed() {
+      store.commit("shareFixed", state.file);
+    }
+
     return {
       state,
       isFileSort: computed(() => store.state.isFileSort),
@@ -245,6 +250,7 @@ export default defineComponent({
       rename,
       audioFixed,
       textFixed,
+      shareFixed,
     };
   },
 });
@@ -258,7 +264,9 @@ export default defineComponent({
   height: 50px;
   width: 200px;
   border-radius: 6px;
-  border: 1px solid #00a0e9;
+  border: 1px solid rgb(0 0 0 / 20%);
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
 }
 .name >>> svg {
   width: 1.5em;
@@ -273,7 +281,9 @@ export default defineComponent({
 .file {
   width: 200px;
   border-radius: 6px;
-  border: 1px solid #00a0e9;
+  border: 1px solid rgb(0 0 0 / 20%);
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
 }
 .file .name {
   border: hidden;

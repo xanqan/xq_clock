@@ -21,6 +21,15 @@ export interface File {
   isFolder: number | undefined;
 }
 
+export interface Share {
+  id: number | undefined;
+  name: string | undefined;
+  path: string | undefined;
+  type: string | undefined;
+  password: string | undefined;
+  exprire: Date | undefined;
+}
+
 export interface Path {
   id: number;
   name: string;

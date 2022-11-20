@@ -23,6 +23,11 @@ const routes = [
         name: "typeList",
         component: () => import("../components/TypeList.vue"),
       },
+      {
+        path: "shareList",
+        name: "shareList",
+        component: () => import("../components/ShareList.vue"),
+      },
     ],
   },
 ];

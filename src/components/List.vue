@@ -71,6 +71,7 @@
   <Upload @fileUpload="fileUpload" @enterUploadPath="enterUploadPath" />
   <AudioFixed v-if="isAudioFixed" />
   <TextFixed v-if="isTextFixed" />
+  <ShareFixed v-if="isShareFixed" />
 </template>
 
 <script lang="ts">
@@ -87,6 +88,7 @@ import Fileblock from "./Fileblock.vue";
 import FileLine from "./FileLine.vue";
 import AudioFixed from "./AudioFixed.vue";
 import TextFixed from "./TextFixed.vue";
+import ShareFixed from "./ShareFixed.vue";
 interface state {
   paths: Path[];
   fileInfos: File[];
@@ -99,6 +101,7 @@ export default defineComponent({
     Upload,
     AudioFixed,
     TextFixed,
+    ShareFixed,
     Fileblock,
     FileLine,
     AppstoreOutlined,
@@ -351,6 +354,7 @@ export default defineComponent({
       isFileSort: computed(() => store.state.isFileSort),
       isAudioFixed: computed(() => store.state.isAudioFixed),
       isTextFixed: computed(() => store.state.isTextFixed),
+      isShareFixed: computed(() => store.state.isShareFixed),
       listStyle: {
         padding: "0 24px",
       },
