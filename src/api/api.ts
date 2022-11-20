@@ -33,16 +33,16 @@ export default {
     );
   },
   fileDelete(params: any) {
-    return http.post(`/file/delete`, params);
+    return http.delete(`/file/delete`, params);
   },
   fileReName(params: any) {
-    return http.post(`/file/reName`, params);
+    return http.put(`/file/reName`, params);
   },
   fileMove(params: any) {
-    return http.post(`/file/move`, params);
+    return http.put(`/file/move`, params);
   },
   fileCopy(params: any) {
-    return http.post(`/file/copy`, params);
+    return http.put(`/file/copy`, params);
   },
   folderCreate(params: any) {
     return http.post(`/file/createFolder`, params);
@@ -51,15 +51,15 @@ export default {
     return http.post(`/file/createFolderBatch`, params);
   },
   folderDelete(params: any) {
-    return http.post(`/file/deleteFolder`, params);
+    return http.delete(`/file/deleteFolder`, params);
   },
   folderReName(params: any) {
-    return http.post(`/file/reNameFolder`, params);
+    return http.put(`/file/reNameFolder`, params);
   },
   folderMove(params: any) {
-    return http.post(`/file/moveFolder`, params);
+    return http.put(`/file/moveFolder`, params);
   },
   folderCopy(params: any) {
-    return http.post(`/file/copyFolder`, params);
+    return http.put(`/file/copyFolder`, params);
   },
 };
