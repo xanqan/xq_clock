@@ -68,4 +68,7 @@ export default {
   getShareUrlAll() {
     return http.get(`/file/getShareUrlAll`);
   },
+  removeShareUrl(params: any) {
+    return http.delete(`/file/removeShareUrl`, params);
+  },
 };

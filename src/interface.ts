@@ -25,9 +25,11 @@ export interface Share {
   id: number | undefined;
   name: string | undefined;
   path: string | undefined;
+  url: string | undefined;
   type: string | undefined;
   password: string | undefined;
-  exprire: Date | undefined;
+  expire: string | undefined;
+  expireFormat: string | undefined;
 }
 
 export interface Path {
