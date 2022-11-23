@@ -21,7 +21,7 @@
             </div>
             <a-divider style="margin: 6px 0" />
             <div class="shareBoxButtom">
-              <file-outlined @click="copyUrl(share.url)" />
+              <file-outlined @click="copyUrl(share.id)" />
               <delete-outlined @click="daleteShare(share.id)" />
             </div>
           </div>
@@ -75,15 +75,16 @@ export default defineComponent({
               value.expire?.slice(0, index) +
               " " +
               value.expire?.slice(index! + 1, index2);
-            console.log(value.expireFormat);
           });
         }
       });
     });
 
-    function copyUrl(url: any) {
+    function copyUrl(id: any) {
       message.success("已复制到剪贴板");
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(
+        `http://127.0.0.1:5173/share/xq${store.state.user?.id}_${id}`
+      );
     }
 
     function daleteShare(id: any) {

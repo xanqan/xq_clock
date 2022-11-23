@@ -30,6 +30,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/share/:shareId",
+    name: "Share",
+    component: () => import("../page/Share.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -37,9 +42,13 @@ const router = createRouter({
   routes,
 });
 
+let page = new Set<string>();
+page.add("Login");
+page.add("Share");
+
 router.beforeEach((to, from, next) => {
   let token = store.state.token;
-  if (token == "" && to.name !== "Login") {
+  if (token == "" && !page.has(String(to.name))) {
     next({ name: "Login" });
   } else next();
 });

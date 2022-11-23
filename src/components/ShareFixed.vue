@@ -52,7 +52,9 @@ export default defineComponent({
         .then((res: any) => {
           if (res.code == 200) {
             message.success("创建成功，已复制到剪贴板");
-            navigator.clipboard.writeText(res.data.url);
+            navigator.clipboard.writeText(
+              `http://127.0.0.1:5173/share/xq${store.state.user?.id}_${res.data.id}`
+            );
             store.commit("shareFixedClose");
           }
         });
