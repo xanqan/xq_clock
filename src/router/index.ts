@@ -28,6 +28,11 @@ const routes = [
         name: "shareList",
         component: () => import("../components/ShareList.vue"),
       },
+      {
+        path: "sizeList",
+        name: "sizeList",
+        component: () => import("../components/SizeList.vue"),
+      },
     ],
   },
   {

@@ -5,6 +5,8 @@ export interface User {
   avatar: string | undefined;
   sizeMax: number;
   sizeUse: number;
+  modifySize: number;
+  isAdmin: number;
 }
 
 export interface File {

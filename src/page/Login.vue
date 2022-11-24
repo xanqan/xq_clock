@@ -1,12 +1,6 @@
 <template>
   <div id="Login">
-    <a-form
-      :model="state"
-      name="basic"
-      autocomplete="off"
-      @finish="onFinish"
-      @finishFailed="onFinishFailed"
-    >
+    <a-form :model="state" name="basic" autocomplete="off" @finish="onFinish">
       <a-form-item
         label="账号"
         name="name"
@@ -23,18 +17,17 @@
         <a-input-password v-model:value="state.password" />
       </a-form-item>
 
-      <a-form-item name="remember">
-        <a-checkbox v-model:checked="state.remember">记住登录</a-checkbox>
-      </a-form-item>
-
       <a-form-item>
         <a-button type="primary" html-type="submit">登录</a-button>
+        <a-button @click="register" style="margin-left: 30px">注册</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script lang="ts">
+import { message } from "ant-design-vue";
+import "ant-design-vue/es/message/style/css";
 import { defineComponent, reactive } from "vue";
 import api from "../api/api";
 import router from "../router";
@@ -53,7 +46,8 @@ export default defineComponent({
       remember: true,
     });
 
-    const onFinish = (values: any) => {
+    function onFinish(values: any) {
+      localStorage.clear();
       api
         .login({
           name: values.name,
@@ -64,19 +58,31 @@ export default defineComponent({
             store.commit("setToken", res.data);
             router.push("/home");
           } else {
-            console.log(res);
+            message.error(res.description);
           }
         });
-    };
+    }
 
-    const onFinishFailed = (errorInfo: any) => {
-      console.log("Failed:", errorInfo);
-    };
+    function register() {
+      localStorage.clear();
+      api
+        .register({
+          name: state.name,
+          password: state.password,
+        })
+        .then((res: any) => {
+          if (res.code == 200) {
+            message.success("注册成功");
+          } else {
+            message.error(res.description);
+          }
+        });
+    }
 
     return {
       state,
       onFinish,
-      onFinishFailed,
+      register,
     };
   },
 });

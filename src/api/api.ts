@@ -4,8 +4,19 @@ export default {
   login(params: any) {
     return http.post("/user/login", params);
   },
+  register(params: any) {
+    return http.post("/user/register", params);
+  },
   home() {
     return http.get("/pageInit/home");
+  },
+  getUserInfo() {
+    return http.get("/user/getUserInfo");
+  },
+  applyModifyCapacity(params: any) {
+    return http.get(
+      `/user/applyModifyCapacity?modifySize=${params.modifySize}`
+    );
   },
   getFileListByType(params: any) {
     return http.get(

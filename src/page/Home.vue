@@ -12,8 +12,6 @@
           <user-outlined style="margin: 0 0 0 20px" />
           <template #overlay>
             <a-menu>
-              <a-menu-item>1st menu item </a-menu-item>
-              <a-menu-item>2nd menu item </a-menu-item>
               <a-menu-item @click="logout">退出登录</a-menu-item>
             </a-menu>
           </template>
@@ -57,7 +55,7 @@
             <laptop-outlined />
             <span> 我的分享 </span>
           </a-menu-item>
-          <a-menu-item key="sub3">
+          <a-menu-item key="sub3" @click="sizeList">
             <notification-outlined />
             <span> 容量配额 </span>
           </a-menu-item>
@@ -74,6 +72,8 @@
 </template>
 
 <script lang="ts">
+import { message } from "ant-design-vue";
+import "ant-design-vue/es/message/style/css";
 import {
   FolderOpenOutlined,
   UserOutlined,
@@ -122,8 +122,12 @@ export default defineComponent({
       router.push({ name: "typeList", params: { type: type } });
     }
 
-    function shareList(type: string) {
+    function shareList() {
       router.push({ name: "shareList" });
+    }
+
+    function sizeList() {
+      router.push({ name: "sizeList" });
     }
 
     function logout() {
@@ -136,6 +140,7 @@ export default defineComponent({
       home,
       typeFile,
       shareList,
+      sizeList,
       logout,
       openKeys: ref<string[]>(["sub1"]),
       selectedKeys: ref<string[]>(["1"]),

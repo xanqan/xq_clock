@@ -76,7 +76,6 @@
 
 <script lang="ts">
 import { message } from "ant-design-vue";
-import "ant-design-vue/es/message/style/css";
 import { AppstoreOutlined } from "@ant-design/icons-vue";
 import { defineComponent, reactive, onBeforeMount, computed, watch } from "vue";
 import api from "../api/api";
